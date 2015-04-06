@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 import CoreGraphics
 
 let CameraKitDomain = "tv.present.CameraKit"
@@ -18,8 +17,9 @@ private let MaxZoomFactor: CGFloat = 8.0
 
 public protocol CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType)
-    
     func cameraController(controller: CameraController, didEncounterError error: NSError)
+    
+    func cameraController(controller: CameraController, didStartCaptureSession started: Bool)
 }
 
 public class CameraController: NSObject {
@@ -30,8 +30,8 @@ public class CameraController: NSObject {
     
     public var delegate: CameraControllerDelegate?
     
-    let captureSession: AVCaptureSession = AVCaptureSession()
-    let previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
+    public let captureSession: AVCaptureSession = AVCaptureSession()
+    public let previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
     
     public var cameraPosition: AVCaptureDevicePosition = .Back {
         didSet {
@@ -298,7 +298,7 @@ private extension CameraController {
         var videoDeviceError: NSError?
         videoDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(defaultVideoDevice, error: &videoDeviceError) as? AVCaptureDeviceInput
         if let error = videoDeviceError {
-            // TODO: Die
+            delegate?.cameraController(self, didEncounterError: error)
         }
         
         // Add the video device input
@@ -314,7 +314,7 @@ private extension CameraController {
         var audioDeviceError: NSError?
         audioDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(defaultAudioDevice, error: &audioDeviceError) as? AVCaptureDeviceInput
         if let error = audioDeviceError {
-            // TODO: Die
+            delegate?.cameraController(self, didEncounterError: error)
         }
         
         addInput(audioDeviceInput)
@@ -409,11 +409,11 @@ private extension CameraController {
 
 public extension CameraController {
     func captureSessionDidStartRunning(notification: NSNotification) {
-        //delegate?.captureSessionDidStartRunning()
+        delegate?.cameraController(self, didStartCaptureSession: true)
     }
     
     func captureSessionDidStopRunning(notification: NSNotification) {
-        //delegate?.captureSessionDidStopRunning()
+        delegate?.cameraController(self, didStartCaptureSession: false)
     }
     
     func captureSessionDidFailWithError(notification: NSNotification) {

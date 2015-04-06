@@ -8,7 +8,7 @@
 
 import UIKit
 import CameraKit
-import AVFoundation
+import AssetsLibrary
 
 class ViewController: UIViewController {
     @IBOutlet
@@ -112,14 +112,31 @@ extension ViewController: UIGestureRecognizerDelegate {
 extension ViewController: CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) {
         if captureStillImage && type == .Video {
-            // TODO: Convert the CMSampleBufferRef to an image
-            // CameraKit.imageFromSampleBuffer(sampleBuffer)
+            //let image: CGImageRef = cgImageFromSampleBuffer(sampleBuffer)
+            //saveCGImageToCameraRoll(image)
+            
             captureStillImage = false
         }
     }
     
     func cameraController(controller: CameraController, didEncounterError error: NSError) {
         println("Camera controller did encounter error: \(error)")
+    }
+}
+
+private extension ViewController {
+    func saveCGImageToCameraRoll(imageRef: CGImageRef) {
+        if let image = UIImage(CGImage: imageRef) {
+            saveImageToCameraRoll(image)
+        }
+    }
+    
+    func saveImageToCameraRoll(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, "successfullySavedImage", nil)
+    }
+    
+    func successfullySavedImage() {
+        println("Successfully saved image!")
     }
 }
 
