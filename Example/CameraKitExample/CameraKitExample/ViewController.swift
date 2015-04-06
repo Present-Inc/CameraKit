@@ -78,7 +78,6 @@ class ViewController: UIViewController {
     func zoomGestureRecognized(sender: UIGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
-        println(zoomGestureRecognizer.scale)
         let newZoomScale: CGFloat = currentPinchGestureScale * zoomGestureRecognizer.scale
         
         // If the new zoom scale is within the possible range, update the current zoom scale,

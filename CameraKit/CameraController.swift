@@ -6,10 +6,9 @@
 //  Copyright (c) 2015 Present, Inc. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 import CoreGraphics
-import AVFoundation
 
 let CameraKitDomain = "tv.present.CameraKit"
 private let VideoOutputQueueIdentifier = CameraKitDomain + ".videoQueue"
@@ -109,6 +108,9 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 
 public extension CameraController {
     // MARK: Focus
+    /**
+        TODO: Support setting the focus mode with point defaulting to previewLayer.center
+     */
     func setFocusMode(focusMode: AVCaptureFocusMode, atPoint point: CGPoint) {
         let focusPoint = previewLayer.captureDevicePointOfInterestForPoint(point)
         
@@ -127,6 +129,9 @@ public extension CameraController {
     }
     
     // MARK: Exposure
+    /**
+        TODO: Support setting the exposure mode with point defaulting to previewLayer.center
+     */
     func setExposureMode(exposureMode: AVCaptureExposureMode, atPoint point: CGPoint) {
         let exposurePoint = previewLayer.captureDevicePointOfInterestForPoint(point)
         

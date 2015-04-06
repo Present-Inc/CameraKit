@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 Present, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
 //! Project version number for CameraKit.
 FOUNDATION_EXPORT double CameraKitVersionNumber;
