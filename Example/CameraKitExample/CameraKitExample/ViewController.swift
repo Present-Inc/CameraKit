@@ -114,6 +114,7 @@ extension ViewController: CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) {
         if captureStillImage && type == .Video {
             // TODO: Convert the CMSampleBufferRef to an image
+            // CameraKit.imageFromSampleBuffer(sampleBuffer)
             captureStillImage = false
         }
     }

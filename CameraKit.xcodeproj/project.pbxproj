@@ -8,44 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		7CB038EB1AD2059500536804 /* CameraKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CB038EA1AD2059500536804 /* CameraKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7CB038F11AD2059500536804 /* CameraKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB038E51AD2059500536804 /* CameraKit.framework */; };
-		7CB038F81AD2059500536804 /* CameraKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB038F71AD2059500536804 /* CameraKitTests.swift */; };
 		7CB039021AD205A600536804 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039011AD205A600536804 /* CameraController.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		7CB038F21AD2059500536804 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7CB038DC1AD2059500536804 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7CB038E41AD2059500536804;
-			remoteInfo = CameraKit;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		7C4656991AD2AD1A00534E90 /* CameraKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CameraKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB038E51AD2059500536804 /* CameraKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CameraKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB038E91AD2059500536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB038EA1AD2059500536804 /* CameraKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraKit.h; sourceTree = "<group>"; };
-		7CB038F01AD2059500536804 /* CameraKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB038F61AD2059500536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB038F71AD2059500536804 /* CameraKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraKitTests.swift; sourceTree = "<group>"; };
 		7CB039011AD205A600536804 /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		7CB038E11AD2059500536804 /* Frameworks */ = {
+		7C4656951AD2AD1A00534E90 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7CB038ED1AD2059500536804 /* Frameworks */ = {
+		7CB038E11AD2059500536804 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CB038F11AD2059500536804 /* CameraKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,7 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				7CB038E51AD2059500536804 /* CameraKit.framework */,
-				7CB038F01AD2059500536804 /* CameraKitTests.xctest */,
+				7C4656991AD2AD1A00534E90 /* CameraKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,6 +95,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		7C4656961AD2AD1A00534E90 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CB038E21AD2059500536804 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -119,6 +113,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		7C4656981AD2AD1A00534E90 /* CameraKit-OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C4656B01AD2AD1A00534E90 /* Build configuration list for PBXNativeTarget "CameraKit-OSX" */;
+			buildPhases = (
+				7C4656941AD2AD1A00534E90 /* Sources */,
+				7C4656951AD2AD1A00534E90 /* Frameworks */,
+				7C4656961AD2AD1A00534E90 /* Headers */,
+				7C4656971AD2AD1A00534E90 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CameraKit-OSX";
+			productName = "CameraKit-OSX";
+			productReference = 7C4656991AD2AD1A00534E90 /* CameraKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		7CB038E41AD2059500536804 /* CameraKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7CB038FB1AD2059500536804 /* Build configuration list for PBXNativeTarget "CameraKit" */;
@@ -137,24 +149,6 @@
 			productReference = 7CB038E51AD2059500536804 /* CameraKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		7CB038EF1AD2059500536804 /* CameraKitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7CB038FE1AD2059500536804 /* Build configuration list for PBXNativeTarget "CameraKitTests" */;
-			buildPhases = (
-				7CB038EC1AD2059500536804 /* Sources */,
-				7CB038ED1AD2059500536804 /* Frameworks */,
-				7CB038EE1AD2059500536804 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7CB038F31AD2059500536804 /* PBXTargetDependency */,
-			);
-			name = CameraKitTests;
-			productName = CameraKitTests;
-			productReference = 7CB038F01AD2059500536804 /* CameraKitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -164,10 +158,10 @@
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Present, Inc";
 				TargetAttributes = {
-					7CB038E41AD2059500536804 = {
+					7C4656981AD2AD1A00534E90 = {
 						CreatedOnToolsVersion = 6.2;
 					};
-					7CB038EF1AD2059500536804 = {
+					7CB038E41AD2059500536804 = {
 						CreatedOnToolsVersion = 6.2;
 					};
 				};
@@ -185,20 +179,20 @@
 			projectRoot = "";
 			targets = (
 				7CB038E41AD2059500536804 /* CameraKit */,
-				7CB038EF1AD2059500536804 /* CameraKitTests */,
+				7C4656981AD2AD1A00534E90 /* CameraKit-OSX */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		7CB038E31AD2059500536804 /* Resources */ = {
+		7C4656971AD2AD1A00534E90 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7CB038EE1AD2059500536804 /* Resources */ = {
+		7CB038E31AD2059500536804 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -208,6 +202,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7C4656941AD2AD1A00534E90 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CB038E01AD2059500536804 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -216,25 +217,52 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7CB038EC1AD2059500536804 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7CB038F81AD2059500536804 /* CameraKitTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		7CB038F31AD2059500536804 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7CB038E41AD2059500536804 /* CameraKit */;
-			targetProxy = 7CB038F21AD2059500536804 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
+		7C4656AC1AD2AD1A00534E90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "CameraKit-OSX/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = CameraKit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		7C4656AD1AD2AD1A00534E90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "CameraKit-OSX/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = CameraKit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		7CB038F91AD2059500536804 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -353,39 +381,17 @@
 			};
 			name = Release;
 		};
-		7CB038FF1AD2059500536804 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = CameraKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		7CB039001AD2059500536804 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = CameraKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7C4656B01AD2AD1A00534E90 /* Build configuration list for PBXNativeTarget "CameraKit-OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C4656AC1AD2AD1A00534E90 /* Debug */,
+				7C4656AD1AD2AD1A00534E90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		7CB038DF1AD2059500536804 /* Build configuration list for PBXProject "CameraKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -402,14 +408,7 @@
 				7CB038FD1AD2059500536804 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-		};
-		7CB038FE1AD2059500536804 /* Build configuration list for PBXNativeTarget "CameraKitTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7CB038FF1AD2059500536804 /* Debug */,
-				7CB039001AD2059500536804 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
