@@ -4,9 +4,10 @@ The easiest way to get camera frames showing up on screen. Written in Swift.
 
 ### TODO
 - [x] Carthage Support
+- [ ] OSX Target
+- [x] Usage examples
 - [ ] CocoaPods Support
 - [ ] Features list
-- [x] Usage examples
 
 ### Features
 
