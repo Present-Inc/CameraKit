@@ -18,11 +18,9 @@ private let AudioOutputQueueIdentifier = CameraKitDomain + ".audioQueue"
 private let MaxZoomFactor: CGFloat = 8.0
 
 public protocol CameraControllerDelegate {
-    func cameraController(controller: CameraController, didStartRecording recording: Bool)
-    func cameraController(controller: CameraController, didStopRecording recording: Bool)
-    
-    func cameraController(controller: CameraController, didCaptureStillImage image: UIImage)
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType)
+    
+    func cameraController(controller: CameraController, didEncounterError error: NSError)
 }
 
 public class CameraController: NSObject {
@@ -45,8 +43,6 @@ public class CameraController: NSObject {
     private var paused: Bool = false
     private var configuringCaptureSession: Bool = false
     
-    private let configuration: CameraControllerConfiguration
-    
     // Capture session inputs
     private var videoDeviceInput: AVCaptureDeviceInput?
     private var audioDeviceInput: AVCaptureDeviceInput?
@@ -56,8 +52,8 @@ public class CameraController: NSObject {
     private var audioDeviceOutput: AVCaptureAudioDataOutput?
     
     // Capture session connections
-    private var videoConnection: AVCaptureConnection!
-    private var audioConnection: AVCaptureConnection!
+    private var videoConnection: AVCaptureConnection?
+    private var audioConnection: AVCaptureConnection?
     
     // Used as the callback queue for the AVCaptureVideoDataOutput
     private let videoOutputQueue: dispatch_queue_t = dispatch_queue_create(VideoOutputQueueIdentifier, DISPATCH_QUEUE_SERIAL)
@@ -68,16 +64,14 @@ public class CameraController: NSObject {
         teardownCaptureSession()
     }
     
-    public init(configuration: CameraControllerConfiguration? = CameraControllerConfiguration()) {
-        self.configuration = configuration!
-        
+    public override init() {
         super.init()
         
         setup()
     }
     
-    public convenience init(configuration: CameraControllerConfiguration? = CameraControllerConfiguration(), view: UIView) {
-        self.init(configuration: configuration)
+    public convenience init(view: UIView) {
+        self.init()
         
         previewLayer.connection.videoOrientation = .Portrait
         
@@ -93,6 +87,8 @@ public class CameraController: NSObject {
     public func stopCaptureSession() {
         captureSession.stopRunning()
     }
+    
+    // TODO: Toggle audio/video streams?
 }
 
 extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
@@ -200,16 +196,19 @@ public extension CameraController {
     }
     
     // MARK: Zoom
-    func setZoom(zoomLevel: CGFloat) {
+    func setZoom(zoomLevel: CGFloat) -> Bool {
         if let videoDevice = currentVideoDevice {
             if zoomLevel <= MaxZoomFactor && zoomLevel >= 1 {
                 var lockError: NSError?
                 if videoDevice.lockForConfiguration(&lockError) {
                     videoDevice.videoZoomFactor = zoomLevel
                     videoDevice.unlockForConfiguration()
+                    return true
                 }
             }
         }
+        
+        return false
     }
     
     // MARK: Camera Position
@@ -218,7 +217,8 @@ public extension CameraController {
     Convenience method for toggling the camera position.
     */
     func toggleCameraPosition() -> Bool {
-        return cameraPosition == .Back ? setCamera(.Front) : setCamera(.Back)
+        cameraPosition = (cameraPosition == .Back) ? .Front : .Back
+        return true
     }
     
     func setCamera(position: AVCaptureDevicePosition) -> Bool {
@@ -226,8 +226,6 @@ public extension CameraController {
             configureCaptureSession { captureSession in
                 self.replaceCurrentVideoDeviceWithDevice(videoDevice)
             }
-            
-            cameraPosition = position
             
             return true
         }
@@ -267,7 +265,7 @@ private extension CameraController {
         addCaptureSessionObserver()
         
         // Set the session preset
-        captureSession.sessionPreset = configuration.sessionPreset
+        captureSession.sessionPreset = AVCaptureSessionPresetHigh
         
         // Setup device inputs
         setupVideoDeviceInput()
@@ -287,6 +285,10 @@ private extension CameraController {
 
 private extension CameraController {
     func setupVideoDeviceInput() {
+        if let videoInput = videoDeviceInput {
+            captureSession.removeInput(videoInput)
+        }
+        
         // Setup the video device input
         var videoDeviceError: NSError?
         videoDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(defaultVideoDevice, error: &videoDeviceError) as? AVCaptureDeviceInput
@@ -299,6 +301,10 @@ private extension CameraController {
     }
     
     func setupAudioDeviceInput() {
+        if let audioInput = audioDeviceInput {
+            captureSession.removeInput(audioInput)
+        }
+        
         // Setup the audio device input
         var audioDeviceError: NSError?
         audioDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(defaultAudioDevice, error: &audioDeviceError) as? AVCaptureDeviceInput
@@ -310,6 +316,10 @@ private extension CameraController {
     }
     
     func setupVideoDeviceOutput() {
+        if let videoOutput = videoDeviceOutput {
+            captureSession.removeOutput(videoOutput)
+        }
+        
         // Setup the video device output
         videoDeviceOutput = AVCaptureVideoDataOutput()
         videoDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
@@ -322,6 +332,10 @@ private extension CameraController {
     }
     
     func setupAudioDeviceOutput() {
+        if let audioOutput = audioDeviceOutput {
+            captureSession.removeOutput(audioOutput)
+        }
+        
         // Setup the audio device output
         audioDeviceOutput = AVCaptureAudioDataOutput()
         audioDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
@@ -333,8 +347,8 @@ private extension CameraController {
     func setupVideoConnection() {
         // Setup the video connction
         videoConnection = videoDeviceOutput?.connectionWithMediaType(AVMediaTypeVideo)
-        videoConnection.videoOrientation = .Portrait
-        videoConnection.preferredVideoStabilizationMode = .Auto
+        videoConnection?.videoOrientation = .Portrait
+        videoConnection?.preferredVideoStabilizationMode = .Auto
     }
     
     func setupAudioConnection() {
@@ -390,7 +404,7 @@ private extension CameraController {
 
 public extension CameraController {
     func captureSessionDidStartRunning(notification: NSNotification) {
-        //sdelegate?.captureSessionDidStartRunning()
+        //delegate?.captureSessionDidStartRunning()
     }
     
     func captureSessionDidStopRunning(notification: NSNotification) {
@@ -402,7 +416,7 @@ public extension CameraController {
         
         stopCaptureSession()
         
-        //delegate?.captureSessionDidFailWithError(captureSessionError)
+        delegate?.cameraController(self, didEncounterError: captureSessionError)
     }
     
     func captureSessionWasInterrupted(notification: NSNotification) {
@@ -503,65 +517,4 @@ private extension CameraController {
         setupAudioConnection()
     }
     
-}
-
-public struct CameraControllerConfiguration {
-    /**
-    The audio sample rate. Default is 44.1khz (44,100).
-    */
-    let audioSampleRate: UInt
-    
-    /**
-    The dimensions of the video. Default is (480, 854).
-    */
-    let videoDimensions: CGSize
-    
-    /**
-    Minimum bitrate for the stream output. Default is 300k.
-    */
-    let minBitrate: UInt
-    
-    /**
-    Maximum bitrate for the stream output. Default is 200k.
-    */
-    let maxBitrate: UInt
-    
-    /**
-    The preset to be applied to the capture session. Default is AVCaptureSessionPresetHigh.
-    */
-    let sessionPreset: String
-    
-    /**
-    The audio bitrate. Default is 64k.
-    */
-    let audioBitrate: UInt
-    
-    /**
-    The video bitrate (computed to be the max bitrate - audio bitrate)
-    */
-    var videoBitrate: UInt {
-        return maxBitrate - audioBitrate
-    }
-    
-    var videoWidth: CGFloat {
-        return videoDimensions.width
-    }
-    
-    var videoHeight: CGFloat {
-        return videoDimensions.height
-    }
-    
-    /**
-    Initializes a CameraControllerConfiguration object for the CameraController
-    */
-    public init(segmentDuration: UInt? = 3, audioSampleRate: UInt? = 44_100, videoDimensions: CGSize? = CGSize(width: 480, height: 854), minBitrate: UInt? = 300_000, maxBitrate: UInt? = 2_000_000, audioBitrate: UInt? = 64_000, sessionPreset: String? = AVCaptureSessionPresetHigh) {
-        self.audioSampleRate = audioSampleRate!
-        self.videoDimensions = videoDimensions!
-        self.minBitrate = minBitrate!
-        self.maxBitrate = maxBitrate!
-        
-        self.audioBitrate = audioBitrate!
-        
-        self.sessionPreset = sessionPreset!
-    }
 }

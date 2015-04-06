@@ -19,10 +19,48 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lDs-hL-zyR">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="9c9-yn-L7z" appends="YES" id="Pce-Do-wFi"/>
+                                    <outletCollection property="gestureRecognizers" destination="P4T-e1-WWu" appends="YES" id="Rjd-Oc-5WJ"/>
+                                </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UJB-6H-b00">
+                                <rect key="frame" x="234" y="520" width="131" height="30"/>
+                                <state key="normal" title="Capture Still Image">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="captureStillImage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="0gD-28-szc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c5L-1D-hJ6">
+                                <rect key="frame" x="20" y="40" width="78" height="30"/>
+                                <state key="normal" title="Toggle LED">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleLED:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="qs8-Lv-OMt"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0E1-ij-qYC">
+                                <rect key="frame" x="476" y="40" width="104" height="30"/>
+                                <state key="normal" title="Toggle Camera">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="yxM-z9-HnG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="0E1-ij-qYC" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="2bn-s3-jRl"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="UJB-6H-b00" secondAttribute="bottom" constant="50" id="6aD-2X-sAP"/>
+                            <constraint firstItem="c5L-1D-hJ6" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="INb-SP-Jb0"/>
+                            <constraint firstItem="c5L-1D-hJ6" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="epI-Rd-jN4"/>
+                            <constraint firstAttribute="centerX" secondItem="UJB-6H-b00" secondAttribute="centerX" id="frg-hp-uLp"/>
+                            <constraint firstAttribute="trailing" secondItem="0E1-ij-qYC" secondAttribute="trailing" constant="20" id="jSM-W4-ejg"/>
                             <constraint firstItem="lDs-hL-zyR" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="ocz-Ay-dQ7"/>
                             <constraint firstAttribute="trailing" secondItem="lDs-hL-zyR" secondAttribute="trailing" id="q6r-bI-hqV"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="lDs-hL-zyR" secondAttribute="bottom" id="v5p-Ey-K3N"/>
@@ -31,9 +69,26 @@
                     </view>
                     <connections>
                         <outlet property="cameraPreview" destination="lDs-hL-zyR" id="ojn-bg-fty"/>
+                        <outlet property="captureStillImageButton" destination="UJB-6H-b00" id="rPe-sT-bI2"/>
+                        <outlet property="focusGestureRecognizer" destination="P4T-e1-WWu" id="xGU-K8-5Gn"/>
+                        <outlet property="toggleCameraButton" destination="0E1-ij-qYC" id="3k6-HS-3vp"/>
+                        <outlet property="toggleLEDButton" destination="c5L-1D-hJ6" id="O9B-Nn-9oG"/>
+                        <outlet property="zoomGestureRecognizer" destination="9c9-yn-L7z" id="AJp-Yq-lYo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="9c9-yn-L7z">
+                    <connections>
+                        <action selector="zoomGestureRecognized:" destination="vXZ-lx-hvc" id="ndJ-Lf-GiU"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="epO-b2-Rjl"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <tapGestureRecognizer id="P4T-e1-WWu">
+                    <connections>
+                        <action selector="focusGestureRecognized:" destination="vXZ-lx-hvc" id="HrV-Kg-ABC"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="ag4-fe-rOl"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
         </scene>
     </scenes>
