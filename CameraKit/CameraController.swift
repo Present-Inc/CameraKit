@@ -180,6 +180,19 @@ public extension CameraController {
     }
     
     // MARK: Torch
+    func setTorchMode(mode: AVCaptureTorchMode) {
+        if let device = currentVideoDevice {
+            if device.hasTorch && device.torchAvailable {
+                var lockError: NSError?
+                if device.lockForConfiguration(&lockError) {
+                    device.torchMode = mode
+                    
+                    device.unlockForConfiguration()
+                }
+            }
+        }
+    }
+    
     func toggleLED() {
         if let device = currentVideoDevice {
             if device.hasTorch && device.torchAvailable {
