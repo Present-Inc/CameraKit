@@ -430,7 +430,7 @@ public extension CameraController {
     }
     
     func captureSessionDidFailWithError(notification: NSNotification) {
-        var captureSessionError: NSError = notification.userInfo![AVCaptureSessionErrorKey] as NSError
+        var captureSessionError: NSError = notification.userInfo![AVCaptureSessionErrorKey] as! NSError
         
         stopCaptureSession()
         
@@ -446,19 +446,19 @@ public extension CameraController {
 
 private extension CameraController {
     var inputDevices: [AVCaptureDeviceInput] {
-        return captureSession.inputs as [AVCaptureDeviceInput]
+        return captureSession.inputs as! [AVCaptureDeviceInput]
     }
     
     var outputDevices: [AVCaptureOutput] {
-        return captureSession.outputs as [AVCaptureOutput]
+        return captureSession.outputs as! [AVCaptureOutput]
     }
     
     var videoDevices: [AVCaptureDevice] {
-        return AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo) as [AVCaptureDevice]
+        return AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo) as! [AVCaptureDevice]
     }
     
     var audioDevices: [AVCaptureDevice] {
-        return AVCaptureDevice.devicesWithMediaType(AVMediaTypeAudio) as [AVCaptureDevice]
+        return AVCaptureDevice.devicesWithMediaType(AVMediaTypeAudio) as! [AVCaptureDevice]
     }
     
     var currentAudioDeviceInput: AVCaptureDeviceInput? {
