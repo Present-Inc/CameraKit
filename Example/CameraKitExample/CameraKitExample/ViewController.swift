@@ -120,7 +120,12 @@ extension ViewController: CameraControllerDelegate {
     }
     
     func cameraController(controller: CameraController, didEncounterError error: NSError) {
-        println("Camera controller did encounter error: \(error)")
+        println("Camera controller did encounter error:\n\(error)")
+    }
+    
+    func cameraController(controller: CameraController, didStartCaptureSession started: Bool) {
+        let verb = started == true ? "start" : "stop"
+        println("Did \(verb) capture session!")
     }
 }
 

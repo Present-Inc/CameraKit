@@ -42,6 +42,13 @@ public class CameraController: NSObject {
     private var paused: Bool = false
     private var configuringCaptureSession: Bool = false
     
+    private var frontCameraDevice: AVCaptureDevice?
+    private var backCameraDevice: AVCaptureDevice?
+    private var audioCaptureDevice: AVCaptureDevice?
+    
+    private var frontCameraDeviceInput: AVCaptureDeviceInput?
+    private var backCameraDeviceInput: AVCaptureDeviceInput?
+    
     // Capture session inputs
     private var videoDeviceInput: AVCaptureDeviceInput?
     private var audioDeviceInput: AVCaptureDeviceInput?
@@ -86,8 +93,6 @@ public class CameraController: NSObject {
     public func stopCaptureSession() {
         captureSession.stopRunning()
     }
-    
-    // TODO: Toggle audio/video streams?
 }
 
 extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
@@ -239,10 +244,12 @@ public extension CameraController {
         return true
     }
     
-    func setCamera(position: AVCaptureDevicePosition) -> Bool {
-        if let videoDevice = videoDeviceForPosition(position) {
+    private func setCamera(position: AVCaptureDevicePosition) -> Bool {
+        let deviceInput = position == .Front ? frontCameraDeviceInput : backCameraDeviceInput
+        
+        if let deviceInput = deviceInput {
             configureCaptureSession { captureSession in
-                self.replaceCurrentVideoDeviceWithDevice(videoDevice)
+                self.replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput)
             }
             
             return true
@@ -253,7 +260,7 @@ public extension CameraController {
     
     func configureCaptureSession(closure: (AVCaptureSession) -> ()) {
         configuringCaptureSession = true
-        
+    
         stopCaptureSession()
         
         captureSession.beginConfiguration()
@@ -285,6 +292,9 @@ private extension CameraController {
         // Set the session preset
         captureSession.sessionPreset = AVCaptureSessionPresetHigh
         
+        // Setup capture devices
+        setupCaptureDevices()
+        
         // Setup device inputs
         setupVideoDeviceInput()
         setupAudioDeviceInput()
@@ -302,6 +312,15 @@ private extension CameraController {
 // MARK: - Capture Session Utilities
 
 private extension CameraController {
+    func setupCaptureDevices() {
+        frontCameraDevice = videoDeviceForPosition(.Front)
+        backCameraDevice = videoDeviceForPosition(.Back)
+        audioCaptureDevice = defaultAudioDevice
+        
+        frontCameraDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(frontCameraDevice!, error: nil) as? AVCaptureDeviceInput
+        backCameraDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(backCameraDevice!, error: nil) as? AVCaptureDeviceInput
+    }
+    
     func setupVideoDeviceInput() {
         if let videoInput = videoDeviceInput {
             captureSession.removeInput(videoInput)
@@ -334,6 +353,7 @@ private extension CameraController {
     }
     
     func setupVideoDeviceOutput() {
+        // If there's already a `videoDeviceOutput`, remove it
         if let videoOutput = videoDeviceOutput {
             captureSession.removeOutput(videoOutput)
         }
@@ -350,6 +370,7 @@ private extension CameraController {
     }
     
     func setupAudioDeviceOutput() {
+        // If there's already an `audioDeviceOutput`, remove it
         if let audioOutput = audioDeviceOutput {
             captureSession.removeOutput(audioOutput)
         }
@@ -365,6 +386,8 @@ private extension CameraController {
     func setupVideoConnection() {
         // Setup the video connction
         videoConnection = videoDeviceOutput?.connectionWithMediaType(AVMediaTypeVideo)
+        
+        // TODO: Support different video orientations
         videoConnection?.videoOrientation = .Portrait
         videoConnection?.preferredVideoStabilizationMode = .Auto
     }
@@ -438,7 +461,7 @@ public extension CameraController {
     }
     
     func captureSessionWasInterrupted(notification: NSNotification) {
-        println("Capture session was interrupted:\n\n\(notification)")
+        println("Capture session was interrupted:\n\(notification)")
     }
 }
 
@@ -485,7 +508,7 @@ private extension CameraController {
         return AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
     }
     
-    func currentDeviceForMediaType(mediaType: String!) -> AVCaptureDeviceInput? {
+    func currentDeviceForMediaType(mediaType: String) -> AVCaptureDeviceInput? {
         for input: AnyObject in captureSession.inputs {
             if let deviceInput = input as? AVCaptureDeviceInput {
                 if deviceInput.device.hasMediaType(mediaType) {
@@ -510,6 +533,10 @@ private extension CameraController {
     func replaceCurrentVideoDeviceWithDevice(device: AVCaptureDevice) {
         let deviceInput = AVCaptureDeviceInput(device: device, error: nil)
         
+        replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput)
+    }
+    
+    func replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput: AVCaptureDeviceInput) {
         if let videoInput = videoDeviceInput {
             captureSession.removeInput(videoInput)
         }
@@ -524,6 +551,10 @@ private extension CameraController {
     func replaceCurrentAudioDeviceWithDevice(device: AVCaptureDevice) {
         let deviceInput = AVCaptureDeviceInput(device: device, error: nil)
         
+        replaceCurrentAudioDeviceInputWithDeviceInput(deviceInput)
+    }
+    
+    func replaceCurrentAudioDeviceInputWithDeviceInput(deviceInput: AVCaptureDeviceInput) {
         if let audioInput = audioDeviceInput {
             captureSession.removeInput(audioInput)
         }

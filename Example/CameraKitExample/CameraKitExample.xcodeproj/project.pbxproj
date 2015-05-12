@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C77F0011B0272D50012BC93 /* CameraKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C77F0001B0272D50012BC93 /* CameraKit.framework */; };
+		7C77F0021B0272DC0012BC93 /* CameraKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7C77F0001B0272D50012BC93 /* CameraKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7CB039121AD2180600536804 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039111AD2180600536804 /* AppDelegate.swift */; };
 		7CB039141AD2180600536804 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039131AD2180600536804 /* ViewController.swift */; };
 		7CB039171AD2180600536804 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CB039151AD2180600536804 /* Main.storyboard */; };
 		7CB039191AD2180600536804 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CB039181AD2180600536804 /* Images.xcassets */; };
 		7CB0391C1AD2180600536804 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0391A1AD2180600536804 /* LaunchScreen.xib */; };
 		7CB039281AD2180600536804 /* CameraKitExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039271AD2180600536804 /* CameraKitExampleTests.swift */; };
-		7CB039321AD2182F00536804 /* CameraKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB039311AD2182F00536804 /* CameraKit.framework */; };
-		7CB039341AD21A3A00536804 /* CameraKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7CB039311AD2182F00536804 /* CameraKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,13 +34,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7CB039341AD21A3A00536804 /* CameraKit.framework in CopyFiles */,
+				7C77F0021B0272DC0012BC93 /* CameraKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7C77F0001B0272D50012BC93 /* CameraKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CameraKit.framework; path = "../../../../../../Library/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos/CameraKit.framework"; sourceTree = "<group>"; };
 		7CB0390C1AD2180600536804 /* CameraKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB039101AD2180600536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB039111AD2180600536804 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,7 +52,6 @@
 		7CB039211AD2180600536804 /* CameraKitExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraKitExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB039261AD2180600536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB039271AD2180600536804 /* CameraKitExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraKitExampleTests.swift; sourceTree = "<group>"; };
-		7CB039311AD2182F00536804 /* CameraKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CameraKit.framework; path = "../../../../../../Library/Developer/Xcode/DerivedData/CameraKit-bdxjeddolpoohfhajehnxlpgwdjl/Build/Products/Debug-iphoneos/CameraKit.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CB039321AD2182F00536804 /* CameraKit.framework in Frameworks */,
+				7C77F0011B0272D50012BC93 /* CameraKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +107,7 @@
 		7CB0390F1AD2180600536804 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				7CB039311AD2182F00536804 /* CameraKit.framework */,
+				7C77F0001B0272D50012BC93 /* CameraKit.framework */,
 				7CB039101AD2180600536804 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -358,6 +358,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bdxjeddolpoohfhajehnxlpgwdjl/Build/Products/Debug-iphoneos",
+					"$(PROJECT_DIR)/CameraKitExample",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = CameraKitExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -372,6 +374,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bdxjeddolpoohfhajehnxlpgwdjl/Build/Products/Debug-iphoneos",
+					"$(PROJECT_DIR)/CameraKitExample",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = CameraKitExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -432,6 +436,7 @@
 				7CB0392D1AD2180600536804 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7CB0392E1AD2180600536804 /* Build configuration list for PBXNativeTarget "CameraKitExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -440,6 +445,7 @@
 				7CB039301AD2180600536804 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
