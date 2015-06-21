@@ -59,6 +59,10 @@ class ViewController: UIViewController {
         cameraController.stopCaptureSession()
     }
     
+    override func viewDidLayoutSubviews() {
+        cameraPreview.frame = view.bounds;
+    }
+    
     @IBAction
     func toggleCamera(sender: UIButton) {
         cameraController.toggleCameraPosition()
@@ -151,8 +155,9 @@ private extension ViewController {
         
         cameraController = CameraController(view: cameraPreview)
         cameraController.delegate = self
+        cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: (.MixWithOthers | .DefaultToSpeaker))
         
-        cameraController.setLowLightBoost()
+        //cameraController.setLowLightBoost()
     }
 }
 

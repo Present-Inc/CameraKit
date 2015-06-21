@@ -93,6 +93,19 @@ public class CameraController: NSObject {
     public func stopCaptureSession() {
         captureSession.stopRunning()
     }
+    
+    public func configureAudioSession(category: String, options: AVAudioSessionCategoryOptions) {
+        let audioSession = AVAudioSession.sharedInstance()
+        
+        var error: NSError?
+        if !audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .MixWithOthers, error: &error) {
+            println("An error occurred: \(error!)")
+        }
+        
+        if !audioSession.setActive(true, error: &error) {
+            println("An error occurred: \(error!)")
+        }
+    }
 }
 
 extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
@@ -287,6 +300,8 @@ private extension CameraController {
     }
     
     func setupCaptureSession() {
+        captureSession.automaticallyConfiguresApplicationAudioSession = false
+        
         addCaptureSessionObserver()
         
         // Set the session preset
