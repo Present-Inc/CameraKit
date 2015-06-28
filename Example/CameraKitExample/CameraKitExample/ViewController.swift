@@ -124,12 +124,12 @@ extension ViewController: CameraControllerDelegate {
     }
     
     func cameraController(controller: CameraController, didEncounterError error: NSError) {
-        println("Camera controller did encounter error:\n\(error)")
+        print("Camera controller did encounter error:\n\(error)")
     }
     
     func cameraController(controller: CameraController, didStartCaptureSession started: Bool) {
         let verb = started == true ? "start" : "stop"
-        println("Did \(verb) capture session!")
+        print("Did \(verb) capture session!")
     }
 }
 
@@ -145,7 +145,7 @@ private extension ViewController {
     }
     
     func successfullySavedImage() {
-        println("Successfully saved image!")
+        print("Successfully saved image!")
     }
 }
 
@@ -155,7 +155,7 @@ private extension ViewController {
         
         cameraController = CameraController(view: cameraPreview)
         cameraController.delegate = self
-        cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: (.MixWithOthers | .DefaultToSpeaker))
+        cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: ([.MixWithOthers, .DefaultToSpeaker]))
         
         //cameraController.setLowLightBoost()
     }

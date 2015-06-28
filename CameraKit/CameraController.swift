@@ -39,13 +39,14 @@ public class CameraController: NSObject {
         }
     }
     
-    private var paused: Bool = false
     private var configuringCaptureSession: Bool = false
     
+    // Capture devices
     private var frontCameraDevice: AVCaptureDevice?
     private var backCameraDevice: AVCaptureDevice?
     private var audioCaptureDevice: AVCaptureDevice?
     
+    // Capture device inputs
     private var frontCameraDeviceInput: AVCaptureDeviceInput?
     private var backCameraDeviceInput: AVCaptureDeviceInput?
     
@@ -97,13 +98,18 @@ public class CameraController: NSObject {
     public func configureAudioSession(category: String, options: AVAudioSessionCategoryOptions) {
         let audioSession = AVAudioSession.sharedInstance()
         
-        var error: NSError?
-        if !audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .MixWithOthers, error: &error) {
-            println("An error occurred: \(error!)")
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .MixWithOthers)
+        }
+        catch let error as NSError {
+            print("An error occurred: \(error)")
         }
         
-        if !audioSession.setActive(true, error: &error) {
-            println("An error occurred: \(error!)")
+        do {
+            try audioSession.setActive(true)
+        }
+        catch let error as NSError {
+            print("An error occurred: \(error)")
         }
     }
 }
@@ -134,13 +140,15 @@ public extension CameraController {
         
         if let videoDevice = currentVideoDevice {
             if videoDevice.focusPointOfInterestSupported && videoDevice.isFocusModeSupported(focusMode) {
-                var lockError: NSError?
-                
-                if videoDevice.lockForConfiguration(&lockError) {
+                do {
+                    try videoDevice.lockForConfiguration()
                     videoDevice.focusPointOfInterest = focusPoint
                     videoDevice.focusMode = focusMode
                     
                     videoDevice.unlockForConfiguration()
+                }
+                catch let error as NSError {
+                    print("An error occurred while setting the focus mode: \(error)")
                 }
             }
         }
@@ -155,13 +163,15 @@ public extension CameraController {
         
         if let videoDevice = currentVideoDevice {
             if videoDevice.exposurePointOfInterestSupported && videoDevice.isExposureModeSupported(exposureMode) {
-                var lockError: NSError?
-                
-                if videoDevice.lockForConfiguration(&lockError) {
+                do {
+                    try videoDevice.lockForConfiguration()
                     videoDevice.exposurePointOfInterest = exposurePoint
                     videoDevice.exposureMode = exposureMode
                     
                     videoDevice.unlockForConfiguration()
+                }
+                catch let error as NSError {
+                    print("An error occurred while setting the exposure: \(error)")
                 }
             }
         }
@@ -171,12 +181,14 @@ public extension CameraController {
     func setWhiteBalanceMode(whiteBalanceMode: AVCaptureWhiteBalanceMode) {
         if let videoDevice = currentVideoDevice {
             if videoDevice.isWhiteBalanceModeSupported(whiteBalanceMode) {
-                var lockError: NSError?
-                
-                if videoDevice.lockForConfiguration(&lockError) {
+                do {
+                    try videoDevice.lockForConfiguration()
                     videoDevice.whiteBalanceMode = whiteBalanceMode
                     
                     videoDevice.unlockForConfiguration()
+                }
+                catch let error as NSError {
+                    print("An error occurred while setting the white balance: \(error)")
                 }
             }
         }
@@ -186,12 +198,14 @@ public extension CameraController {
     func setLowLightBoost(automaticallyEnabled: Bool = true) {
         if let videoDevice = currentVideoDevice {
             if videoDevice.lowLightBoostSupported {
-                var lockError: NSError?
-                
-                if videoDevice.lockForConfiguration(&lockError) {
+                do {
+                    try videoDevice.lockForConfiguration()
                     videoDevice.automaticallyEnablesLowLightBoostWhenAvailable = automaticallyEnabled
                     
                     videoDevice.unlockForConfiguration()
+                }
+                catch let error as NSError {
+                    print("An error occurred while settings the low light boost: \(error)")
                 }
             }
         }
@@ -201,11 +215,14 @@ public extension CameraController {
     func setTorchMode(mode: AVCaptureTorchMode) {
         if let device = currentVideoDevice {
             if device.hasTorch && device.torchAvailable {
-                var lockError: NSError?
-                if device.lockForConfiguration(&lockError) {
+                do {
+                    try device.lockForConfiguration()
                     device.torchMode = mode
                     
                     device.unlockForConfiguration()
+                }
+                catch let error as NSError {
+                    print("An error occurred while setting the torch mode: \(error)")
                 }
             }
         }
@@ -214,8 +231,8 @@ public extension CameraController {
     func toggleLED() {
         if let device = currentVideoDevice {
             if device.hasTorch && device.torchAvailable {
-                var lockError: NSError?
-                if device.lockForConfiguration(&lockError) {
+                do {
+                    try device.lockForConfiguration()
                     switch(device.torchMode) {
                     case .Off:
                         device.torchMode = .On
@@ -227,6 +244,9 @@ public extension CameraController {
                     
                     device.unlockForConfiguration()
                 }
+                catch let error as NSError {
+                    print("An error occurred while toggling the LED: \(error)")
+                }
             }
         }
     }
@@ -235,11 +255,14 @@ public extension CameraController {
     func setZoom(zoomLevel: CGFloat) -> Bool {
         if let videoDevice = currentVideoDevice {
             if zoomLevel <= MaxZoomFactor && zoomLevel >= 1 {
-                var lockError: NSError?
-                if videoDevice.lockForConfiguration(&lockError) {
+                do {
+                    try videoDevice.lockForConfiguration()
                     videoDevice.videoZoomFactor = zoomLevel
                     videoDevice.unlockForConfiguration()
                     return true
+                }
+                catch let error as NSError {
+                    print("An error occurred while settings the zoom: \(error)")
                 }
             }
         }
@@ -332,8 +355,13 @@ private extension CameraController {
         backCameraDevice = videoDeviceForPosition(.Back)
         audioCaptureDevice = defaultAudioDevice
         
-        frontCameraDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(frontCameraDevice!, error: nil) as? AVCaptureDeviceInput
-        backCameraDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(backCameraDevice!, error: nil) as? AVCaptureDeviceInput
+        do {
+            try frontCameraDeviceInput = AVCaptureDeviceInput(device: frontCameraDevice!)
+            try backCameraDeviceInput = AVCaptureDeviceInput(device: backCameraDevice!)
+        }
+        catch let error as NSError {
+            delegate?.cameraController(self, didEncounterError: error)
+        }
     }
     
     func setupVideoDeviceInput() {
@@ -341,15 +369,13 @@ private extension CameraController {
             captureSession.removeInput(videoInput)
         }
         
-        // Setup the video device input
-        var videoDeviceError: NSError?
-        videoDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(defaultVideoDevice, error: &videoDeviceError) as? AVCaptureDeviceInput
-        if let error = videoDeviceError {
+        do {
+            try videoDeviceInput = AVCaptureDeviceInput(device: defaultVideoDevice)
+            addInput(videoDeviceInput)
+        }
+        catch let error as NSError {
             delegate?.cameraController(self, didEncounterError: error)
         }
-        
-        // Add the video device input
-        addInput(videoDeviceInput)
     }
     
     func setupAudioDeviceInput() {
@@ -357,14 +383,13 @@ private extension CameraController {
             captureSession.removeInput(audioInput)
         }
         
-        // Setup the audio device input
-        var audioDeviceError: NSError?
-        audioDeviceInput = AVCaptureDeviceInput.deviceInputWithDevice(defaultAudioDevice, error: &audioDeviceError) as? AVCaptureDeviceInput
-        if let error = audioDeviceError {
+        do {
+            try audioDeviceInput = AVCaptureDeviceInput(device: defaultAudioDevice)
+            addInput(audioDeviceInput)
+        }
+        catch let error as NSError {
             delegate?.cameraController(self, didEncounterError: error)
         }
-        
-        addInput(audioDeviceInput)
     }
     
     func setupVideoDeviceOutput() {
@@ -376,8 +401,10 @@ private extension CameraController {
         // Setup the video device output
         videoDeviceOutput = AVCaptureVideoDataOutput()
         videoDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
+        
+        let pixelFormat: Int32 = Int32(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
         videoDeviceOutput?.videoSettings = [
-            kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+            kCVPixelBufferPixelFormatTypeKey: NSNumber(int: pixelFormat)
         ]
         
         // Add the video device output
@@ -468,7 +495,7 @@ public extension CameraController {
     }
     
     func captureSessionDidFailWithError(notification: NSNotification) {
-        var captureSessionError: NSError = notification.userInfo![AVCaptureSessionErrorKey] as! NSError
+        let captureSessionError: NSError = notification.userInfo![AVCaptureSessionErrorKey] as! NSError
         
         stopCaptureSession()
         
@@ -476,7 +503,7 @@ public extension CameraController {
     }
     
     func captureSessionWasInterrupted(notification: NSNotification) {
-        println("Capture session was interrupted:\n\(notification)")
+        print("Capture session was interrupted:\n\(notification)")
     }
 }
 
@@ -524,11 +551,9 @@ private extension CameraController {
     }
     
     func currentDeviceForMediaType(mediaType: String) -> AVCaptureDeviceInput? {
-        for input: AnyObject in captureSession.inputs {
-            if let deviceInput = input as? AVCaptureDeviceInput {
-                if deviceInput.device.hasMediaType(mediaType) {
-                    return deviceInput
-                }
+        for input in inputDevices {
+            if input.device.hasMediaType(mediaType) {
+                return input
             }
         }
         
@@ -546,7 +571,13 @@ private extension CameraController {
     }
     
     func replaceCurrentVideoDeviceWithDevice(device: AVCaptureDevice) {
-        let deviceInput = AVCaptureDeviceInput(device: device, error: nil)
+        let deviceInput: AVCaptureDeviceInput!
+        do {
+            deviceInput = try AVCaptureDeviceInput(device: device)
+        }
+        catch _ {
+            deviceInput = nil
+        }
         
         replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput)
     }
@@ -564,7 +595,13 @@ private extension CameraController {
     }
     
     func replaceCurrentAudioDeviceWithDevice(device: AVCaptureDevice) {
-        let deviceInput = AVCaptureDeviceInput(device: device, error: nil)
+        let deviceInput: AVCaptureDeviceInput!
+        do {
+            deviceInput = try AVCaptureDeviceInput(device: device)
+        }
+        catch _ {
+            deviceInput = nil
+        }
         
         replaceCurrentAudioDeviceInputWithDeviceInput(deviceInput)
     }
