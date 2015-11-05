@@ -392,7 +392,7 @@ private extension CameraController {
         
         // Setup the audio device output
         audioDeviceOutput = AVCaptureAudioDataOutput()
-        audioDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
+        audioDeviceOutput?.setSampleBufferDelegate(self, queue: audioOutputQueue)
         
         // Add the audio device output
         addOutput(audioDeviceOutput)
