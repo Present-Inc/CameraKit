@@ -70,12 +70,16 @@ class ViewController: UIViewController {
     
     @IBAction
     func toggleLED(sender: UIButton) {
-        cameraController.toggleLED()
+        do {
+            try cameraController.toggleLED()
+        } catch {
+            print("Could not toggle LED. Update button state to reflect this")
+        }
     }
     
     @IBAction
     func captureStillImage(sender: UIButton) {
-        captureStillImage = true
+        cameraController.captureStillImage()
     }
     
     @IBAction
@@ -86,8 +90,11 @@ class ViewController: UIViewController {
         
         // If the new zoom scale is within the possible range, update the current zoom scale,
         // and set the camera controller's zoom to it.
-        if cameraController.setZoom(newZoomScale) {
+        do {
+            try cameraController.setZoom(newZoomScale)
             currentZoomScale = newZoomScale
+        } catch {
+            print("Could not set zoom!")
         }
     }
     
@@ -98,8 +105,16 @@ class ViewController: UIViewController {
         
         // Update camera controller's focus & exposure modes to continuously auto-focus on the
         // point of the tap gesture.
-        cameraController.setFocusMode(AVCaptureFocusMode.ContinuousAutoFocus, atPoint: focusPoint)
-        cameraController.setExposureMode(AVCaptureExposureMode.ContinuousAutoExposure, atPoint: focusPoint)
+        do {
+            try cameraController.setFocusMode(AVCaptureFocusMode.ContinuousAutoFocus, atPoint: focusPoint)
+            try cameraController.setExposureMode(AVCaptureExposureMode.ContinuousAutoExposure, atPoint: focusPoint)
+        } catch {
+            print("Could not set focus or exposure mode")
+        }
+    }
+    
+    func successfullySavedImage(image: UIImage, error: NSError, context: UnsafeMutablePointer<Void>) {
+        print("Successfully saved image!")
     }
 }
 
@@ -114,38 +129,27 @@ extension ViewController: UIGestureRecognizerDelegate {
 }
 
 extension ViewController: CameraControllerDelegate {
+    func cameraController(controller: CameraController, didOutputImage image: UIImage) {
+        saveImageToCameraRoll(image)
+    }
+    
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) {
-        if captureStillImage && type == .Video {
-            //let image: CGImageRef = cgImageFromSampleBuffer(sampleBuffer)
-            //saveCGImageToCameraRoll(image)
-            
-            captureStillImage = false
-        }
+        // TODO: Process video and audio frames here
     }
     
     func cameraController(controller: CameraController, didEncounterError error: NSError) {
-        println("Camera controller did encounter error:\n\(error)")
+        print("Camera controller did encounter error:\n\(error)")
     }
     
     func cameraController(controller: CameraController, didStartCaptureSession started: Bool) {
         let verb = started == true ? "start" : "stop"
-        println("Did \(verb) capture session!")
+        print("Did \(verb) capture session!")
     }
 }
 
 private extension ViewController {
-    func saveCGImageToCameraRoll(imageRef: CGImageRef) {
-        if let image = UIImage(CGImage: imageRef) {
-            saveImageToCameraRoll(image)
-        }
-    }
-    
     func saveImageToCameraRoll(image: UIImage) {
-        UIImageWriteToSavedPhotosAlbum(image, self, "successfullySavedImage", nil)
-    }
-    
-    func successfullySavedImage() {
-        println("Successfully saved image!")
+        UIImageWriteToSavedPhotosAlbum(image, self, "successfullySavedImage:error:context:", nil)
     }
 }
 
@@ -155,7 +159,12 @@ private extension ViewController {
         
         cameraController = CameraController(view: cameraPreview)
         cameraController.delegate = self
-        cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: (.MixWithOthers | .DefaultToSpeaker))
+        
+        do {
+            try cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: [.MixWithOthers, .DefaultToSpeaker])
+        } catch {
+            print("Could not configure audio sessions with desired settings")
+        }
         
         //cameraController.setLowLightBoost()
     }
