@@ -9,11 +9,14 @@
 /* Begin PBXBuildFile section */
 		7C51851A1C31B3D900B8CB53 /* CameraKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7C5185161C31B39700B8CB53 /* CameraKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7CB039121AD2180600536804 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039111AD2180600536804 /* AppDelegate.swift */; };
-		7CB039141AD2180600536804 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039131AD2180600536804 /* ViewController.swift */; };
+		7CB039141AD2180600536804 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039131AD2180600536804 /* CameraViewController.swift */; };
 		7CB039171AD2180600536804 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CB039151AD2180600536804 /* Main.storyboard */; };
 		7CB039191AD2180600536804 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CB039181AD2180600536804 /* Images.xcassets */; };
 		7CB0391C1AD2180600536804 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0391A1AD2180600536804 /* LaunchScreen.xib */; };
 		7CB039281AD2180600536804 /* CameraKitExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039271AD2180600536804 /* CameraKitExampleTests.swift */; };
+		7CF91A841C6D162E00D04FB9 /* SquareCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF91A831C6D162E00D04FB9 /* SquareCameraViewController.swift */; };
+		7CF91A861C6D27CA00D04FB9 /* TextDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF91A851C6D27CA00D04FB9 /* TextDetectionViewController.swift */; };
+		7CF91A871C6D27CA00D04FB9 /* TextDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF91A851C6D27CA00D04FB9 /* TextDetectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,13 +62,15 @@
 		7CB0390C1AD2180600536804 /* CameraKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB039101AD2180600536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB039111AD2180600536804 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7CB039131AD2180600536804 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7CB039131AD2180600536804 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		7CB039161AD2180600536804 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7CB039181AD2180600536804 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7CB0391B1AD2180600536804 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		7CB039211AD2180600536804 /* CameraKitExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraKitExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB039261AD2180600536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB039271AD2180600536804 /* CameraKitExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraKitExampleTests.swift; sourceTree = "<group>"; };
+		7CF91A831C6D162E00D04FB9 /* SquareCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SquareCameraViewController.swift; sourceTree = "<group>"; };
+		7CF91A851C6D27CA00D04FB9 /* TextDetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextDetectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +122,9 @@
 			isa = PBXGroup;
 			children = (
 				7CB039111AD2180600536804 /* AppDelegate.swift */,
-				7CB039131AD2180600536804 /* ViewController.swift */,
+				7CB039131AD2180600536804 /* CameraViewController.swift */,
+				7CF91A831C6D162E00D04FB9 /* SquareCameraViewController.swift */,
+				7CF91A851C6D27CA00D04FB9 /* TextDetectionViewController.swift */,
 				7CB039151AD2180600536804 /* Main.storyboard */,
 				7CB039181AD2180600536804 /* Images.xcassets */,
 				7CB0391A1AD2180600536804 /* LaunchScreen.xib */,
@@ -204,6 +211,7 @@
 				TargetAttributes = {
 					7CB0390B1AD2180600536804 = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = KMC5HK5ZC7;
 					};
 					7CB039201AD2180600536804 = {
 						CreatedOnToolsVersion = 6.2;
@@ -271,8 +279,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CB039141AD2180600536804 /* ViewController.swift in Sources */,
+				7CB039141AD2180600536804 /* CameraViewController.swift in Sources */,
+				7CF91A861C6D27CA00D04FB9 /* TextDetectionViewController.swift in Sources */,
 				7CB039121AD2180600536804 /* AppDelegate.swift in Sources */,
+				7CF91A841C6D162E00D04FB9 /* SquareCameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CB039281AD2180600536804 /* CameraKitExampleTests.swift in Sources */,
+				7CF91A871C6D27CA00D04FB9 /* TextDetectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +411,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bdxjeddolpoohfhajehnxlpgwdjl/Build/Products/Debug-iphoneos",
@@ -407,6 +419,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = CameraKitExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -416,6 +429,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bdxjeddolpoohfhajehnxlpgwdjl/Build/Products/Debug-iphoneos",
@@ -423,6 +437,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = CameraKitExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

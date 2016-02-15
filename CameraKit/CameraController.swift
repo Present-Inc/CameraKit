@@ -15,19 +15,45 @@ private let AudioOutputQueueIdentifier = CameraKitDomain + ".audioQueue"
 
 private let MaxZoomFactor: CGFloat = 8.0
 
+enum CameraControllerError: ErrorType {
+    case InvalidStillImageOutputConnection
+    
+    // TODO: This should be expanded upon to provide specific errors for each point where AVFoundation can fail
+    case AVFoundationError(NSError)
+}
+
 public protocol CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType)
     func cameraController(controller: CameraController, didOutputImage image: UIImage)
+}
+
+private protocol CameraControllerConfiguration {
+    var captureMode: CameraController.CaptureMode { get }
+    var orientation: AVCaptureVideoOrientation { get }
     
-    func cameraController(controller: CameraController, didEncounterError error: NSError)
+    var audioSessionCategory: String { get }
+    var audioSessionCategoryOptions: AVAudioSessionCategoryOptions { get }
     
-    func cameraController(controller: CameraController, didStartCaptureSession started: Bool)
+    var stillImageOutputSettings: [String: AnyObject] { get }
 }
 
 public class CameraController: NSObject {
     public enum FrameType {
         case Audio
         case Video
+    }
+    
+    ///   This be used to enable:
+    ///      CameraController(view, [.Video, .Photo])
+    ///      CameraController(view, .Video)
+    ///      CameraController(view, .Photo)
+    ///
+    ///      CameraController([.Video, .Photo])
+    ///      CameraController(.Video)
+    ///      CameraController(.Photo)
+    public enum CaptureMode {
+        case Video
+        case Photo
     }
     
     public var delegate: CameraControllerDelegate?
@@ -73,20 +99,21 @@ public class CameraController: NSObject {
         teardownCaptureSession()
     }
     
-    public override init() {
+    public init(captureMode: CaptureMode) throws {
         super.init()
         
-        setup()
+        try setup(captureMode)
     }
     
-    public convenience init(view: UIView) {
-        self.init()
+    public convenience init(view: UIView, captureMode: CaptureMode = .Video) throws {
+        try self.init(captureMode: captureMode)
         
         previewLayer.connection.videoOrientation = .Portrait
         
-        // Add the preview layer to the view
-        previewLayer.frame = view.bounds
-        view.layer.addSublayer(previewLayer)
+        let rootLayer = view.layer
+        rootLayer.masksToBounds = true
+        previewLayer.frame = rootLayer.bounds
+        rootLayer.addSublayer(previewLayer)
     }
     
     public func startCaptureSession() {
@@ -100,20 +127,23 @@ public class CameraController: NSObject {
     public func configureAudioSession(category: String, options: AVAudioSessionCategoryOptions) throws {
         let audioSession = AVAudioSession.sharedInstance()
         
-        try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .MixWithOthers)
-        try audioSession.setActive(true)
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .MixWithOthers)
+            try audioSession.setActive(true)
+        } catch let error as NSError {
+            throw CameraControllerError.AVFoundationError(error)
+        }
     }
     
-    public func captureStillImage() {
+    public func captureStillImage() throws {
         if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) where (videoConnection.enabled && videoConnection.active) {
-            print("Video connection is enabled and active")
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
                 guard let image = UIImage(data: imageData) else { return }
                 self.delegate?.cameraController(self, didOutputImage: image)
             })
         } else {
-            print("Video connection is not enabled or active")
+            throw CameraControllerError.InvalidStillImageOutputConnection
         }
     }
 }
@@ -134,6 +164,7 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 
 // MARK: - Camera Methods
 
+// TODO: This group of methods should throw specific errors indicating what happend for lightweight error handling for consumers
 public extension CameraController {
     // MARK: Focus
     /**
@@ -278,9 +309,9 @@ public extension CameraController {
 // MARK: - Setup Methods
 
 private extension CameraController {
-    func setup() {
+    func setup(captureMode: CaptureMode) throws {
         setupPreviewLayer()
-        setupCaptureSession()
+        try setupCaptureSession(captureMode)
     }
     
     func setupPreviewLayer() {
@@ -288,20 +319,21 @@ private extension CameraController {
         previewLayer.videoGravity = AVVideoScalingModeFit
     }
     
-    func setupCaptureSession() {
+    func setupCaptureSession(captureMode: CaptureMode) throws {
         captureSession.automaticallyConfiguresApplicationAudioSession = false
-        
-        addCaptureSessionObserver()
         
         // Set the session preset
         captureSession.sessionPreset = AVCaptureSessionPresetHigh
         
         // Setup capture devices
-        setupCaptureDevices()
+        try setupCaptureDevices()
+
+        // TODO: Use the capture mode to configure which devices are set up
+        // TODO: Photo is video, no audio, still image output
+        // TODO: Video is video and audio, no still image output
         
-        // Setup device inputs
-        setupVideoDeviceInput()
-        setupAudioDeviceInput()
+        try setupVideoDeviceInput()
+        try setupAudioDeviceInput()
         
         // Setup device outputs
         setupVideoDeviceOutput()
@@ -317,45 +349,32 @@ private extension CameraController {
 // MARK: - Capture Session Utilities
 
 private extension CameraController {
-    func setupCaptureDevices() {
+    func setupCaptureDevices() throws {
         frontCameraDevice = videoDeviceForPosition(.Front)
         backCameraDevice = videoDeviceForPosition(.Back)
         audioCaptureDevice = defaultAudioDevice
         
         // TODO: This should result in a failure during setup, but for now is handled by marking the device inputs as nil
-        
-        do {
-            frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice)
-            backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice)
-        } catch let error as NSError {
-            print("An error occurred while trying to setup a capture device: \(error)")
-        }
+        frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice)
+        backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice)
     }
     
-    func setupVideoDeviceInput() {
+    func setupVideoDeviceInput() throws {
         if let videoInput = videoDeviceInput {
             captureSession.removeInput(videoInput)
         }
         
-        do {
-            videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice)
-            addInput(videoDeviceInput)
-        } catch let error as NSError {
-            delegate?.cameraController(self, didEncounterError: error)
-        }
+        videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice)
+        addInput(videoDeviceInput)
     }
     
-    func setupAudioDeviceInput() {
+    func setupAudioDeviceInput() throws {
         if let audioInput = audioDeviceInput {
             captureSession.removeInput(audioInput)
         }
         
-        do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: defaultAudioDevice)
-            addInput(audioDeviceInput)
-        } catch let error as NSError {
-            delegate?.cameraController(self, didEncounterError: error)
-        }
+        audioDeviceInput = try AVCaptureDeviceInput(device: defaultAudioDevice)
+        addInput(audioDeviceInput)
     }
     
     func setupVideoDeviceOutput() {
@@ -367,9 +386,9 @@ private extension CameraController {
         // Setup the video device output
         videoDeviceOutput = AVCaptureVideoDataOutput()
         videoDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
-//        videoDeviceOutput?.videoSettings = [
-//            kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
-//        ]
+        videoDeviceOutput?.videoSettings = [
+            kCVPixelBufferPixelFormatTypeKey: NSNumber(unsignedInt: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+        ]
         
         // Add the video device output
         addOutput(videoDeviceOutput)
@@ -423,27 +442,7 @@ private extension CameraController {
         }
     }
     
-    func addCaptureSessionObserver() {
-        let notificationCenter = NSNotificationCenter.defaultCenter()
-        
-        notificationCenter.addObserver(self, selector: "captureSessionDidStartRunning:", name: AVCaptureSessionDidStartRunningNotification, object: self.captureSession)
-        notificationCenter.addObserver(self, selector: "captureSessionDidStopRunning:", name: AVCaptureSessionDidStopRunningNotification, object: self.captureSession)
-        notificationCenter.addObserver(self, selector: "captureSessionDidFailWithError:", name: AVCaptureSessionRuntimeErrorNotification, object: self.captureSession)
-        notificationCenter.addObserver(self, selector: "captureSessionWasInterrupted:", name: AVCaptureSessionWasInterruptedNotification, object: self.captureSession)
-    }
-    
-    func removeCaptureSessionObserver() {
-        let notificationCenter = NSNotificationCenter.defaultCenter()
-        
-        notificationCenter.removeObserver(self, name: AVCaptureSessionDidStartRunningNotification, object: nil)
-        notificationCenter.removeObserver(self, name: AVCaptureSessionDidStopRunningNotification, object: nil)
-        notificationCenter.removeObserver(self, name: AVCaptureSessionRuntimeErrorNotification, object: nil)
-        notificationCenter.removeObserver(self, name: AVCaptureSessionWasInterruptedNotification, object: nil)
-    }
-    
     func teardownCaptureSession() {
-        removeCaptureSessionObserver()
-        
         for input in inputDevices {
             captureSession.removeInput(input)
         }
@@ -454,28 +453,6 @@ private extension CameraController {
         
         previewLayer.removeFromSuperlayer()
         previewLayer.session = nil
-    }
-}
-
-public extension CameraController {
-    func captureSessionDidStartRunning(notification: NSNotification) {
-        delegate?.cameraController(self, didStartCaptureSession: true)
-    }
-    
-    func captureSessionDidStopRunning(notification: NSNotification) {
-        delegate?.cameraController(self, didStartCaptureSession: false)
-    }
-    
-    func captureSessionDidFailWithError(notification: NSNotification) {
-        let captureSessionError: NSError = notification.userInfo![AVCaptureSessionErrorKey] as! NSError
-        
-        stopCaptureSession()
-        
-        delegate?.cameraController(self, didEncounterError: captureSessionError)
-    }
-    
-    func captureSessionWasInterrupted(notification: NSNotification) {
-        print("Capture session was interrupted:\n\(notification)")
     }
 }
 
@@ -499,11 +476,11 @@ private extension CameraController {
     }
     
     var currentAudioDeviceInput: AVCaptureDeviceInput? {
-        return currentDeviceForMediaType(AVMediaTypeAudio)
+        return currentInputDeviceForMediaType(AVMediaTypeAudio)
     }
     
     var currentVideoDeviceInput: AVCaptureDeviceInput? {
-        return currentDeviceForMediaType(AVMediaTypeVideo)
+        return currentInputDeviceForMediaType(AVMediaTypeVideo)
     }
     
     var currentVideoDevice: AVCaptureDevice? {
@@ -522,7 +499,7 @@ private extension CameraController {
         return AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
     }
     
-    func currentDeviceForMediaType(mediaType: String) -> AVCaptureDeviceInput? {
+    func currentInputDeviceForMediaType(mediaType: String) -> AVCaptureDeviceInput? {
         for input: AnyObject in captureSession.inputs {
             if let deviceInput = input as? AVCaptureDeviceInput {
                 if deviceInput.device.hasMediaType(mediaType) {
@@ -535,13 +512,7 @@ private extension CameraController {
     }
     
     func videoDeviceForPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
-        for device in videoDevices {
-            if device.position == position {
-                return device
-            }
-        }
-        
-        return nil
+        return videoDevices.filter { $0.position == position }.first
     }
     
     func replaceCurrentVideoDeviceWithDevice(device: AVCaptureDevice) throws {

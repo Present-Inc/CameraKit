@@ -1,13 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="exx-cn-42l">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
+        <scene sceneID="8Lv-KZ-93w">
+            <objects>
+                <viewController id="exx-cn-42l" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="a3N-bZ-seV"/>
+                        <viewControllerLayoutGuide type="bottom" id="icw-t1-8SZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jHX-lh-nJP">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="0wy-sR-Mbk">
+                                <rect key="frame" x="226" y="240" width="150" height="171"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CameraKit Example" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s3g-u7-6zv">
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="my5-gY-d9F">
+                                        <rect key="frame" x="0.0" y="41" width="150" height="30"/>
+                                        <state key="normal" title="Full Screen Camera"/>
+                                        <connections>
+                                            <segue destination="vXZ-lx-hvc" kind="show" id="Ej7-nt-v3P"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eWB-vv-HmV">
+                                        <rect key="frame" x="0.0" y="91" width="150" height="30"/>
+                                        <state key="normal" title="Square Camera"/>
+                                        <connections>
+                                            <segue destination="C78-ch-LFX" kind="show" id="cd1-eF-6wU"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hFU-HD-vLE">
+                                        <rect key="frame" x="0.0" y="141" width="150" height="30"/>
+                                        <state key="normal" title="Video Camera"/>
+                                        <connections>
+                                            <segue destination="zZO-Eb-Ept" kind="show" id="c0W-dj-bb6"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0wy-sR-Mbk" firstAttribute="centerX" secondItem="jHX-lh-nJP" secondAttribute="centerX" id="cLj-mJ-CIH"/>
+                            <constraint firstItem="0wy-sR-Mbk" firstAttribute="centerY" secondItem="jHX-lh-nJP" secondAttribute="centerY" id="gzS-Vi-vpx"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Nk-Ko-9ho" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-382" y="750"/>
+        </scene>
+        <!--Camera View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="CameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -26,17 +83,24 @@
                                 </connections>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UJB-6H-b00">
-                                <rect key="frame" x="234" y="520" width="131" height="30"/>
-                                <state key="normal" title="Capture Still Image">
+                                <rect key="frame" x="272.5" y="520" width="55" height="30"/>
+                                <state key="normal" title="Capture">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="captureStillImage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="0gD-28-szc"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gyl-ii-PIL">
+                                <rect key="frame" x="20" y="40" width="39" height="30"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="hbz-zJ-J7j"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c5L-1D-hJ6">
-                                <rect key="frame" x="20" y="40" width="78" height="30"/>
-                                <state key="normal" title="Toggle LED">
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
+                                <state key="normal" title="LED">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -44,8 +108,8 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0E1-ij-qYC">
-                                <rect key="frame" x="476" y="40" width="104" height="30"/>
-                                <state key="normal" title="Toggle Camera">
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
+                                <state key="normal" title="Camera">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -57,13 +121,15 @@
                         <constraints>
                             <constraint firstItem="0E1-ij-qYC" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="2bn-s3-jRl"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="UJB-6H-b00" secondAttribute="bottom" constant="50" id="6aD-2X-sAP"/>
-                            <constraint firstItem="c5L-1D-hJ6" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="INb-SP-Jb0"/>
-                            <constraint firstItem="c5L-1D-hJ6" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="epI-Rd-jN4"/>
+                            <constraint firstItem="c5L-1D-hJ6" firstAttribute="top" secondItem="0E1-ij-qYC" secondAttribute="top" id="BZy-Jo-669"/>
+                            <constraint firstItem="0E1-ij-qYC" firstAttribute="leading" secondItem="c5L-1D-hJ6" secondAttribute="trailing" constant="20" id="Eel-Ta-C4k"/>
+                            <constraint firstItem="Gyl-ii-PIL" firstAttribute="top" secondItem="0E1-ij-qYC" secondAttribute="top" id="TVd-en-Fhy"/>
                             <constraint firstAttribute="centerX" secondItem="UJB-6H-b00" secondAttribute="centerX" id="frg-hp-uLp"/>
                             <constraint firstAttribute="trailing" secondItem="0E1-ij-qYC" secondAttribute="trailing" constant="20" id="jSM-W4-ejg"/>
                             <constraint firstItem="lDs-hL-zyR" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="ocz-Ay-dQ7"/>
                             <constraint firstAttribute="trailing" secondItem="lDs-hL-zyR" secondAttribute="trailing" id="q6r-bI-hqV"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="lDs-hL-zyR" secondAttribute="bottom" id="v5p-Ey-K3N"/>
+                            <constraint firstItem="Gyl-ii-PIL" firstAttribute="leading" secondItem="lDs-hL-zyR" secondAttribute="leading" constant="20" id="wKr-Vc-ERE"/>
                             <constraint firstItem="lDs-hL-zyR" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="wfE-cB-W7w"/>
                         </constraints>
                     </view>
@@ -90,6 +156,198 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
+            <point key="canvasLocation" x="385" y="50"/>
+        </scene>
+        <!--Square Camera View Controller-->
+        <scene sceneID="AD6-7R-RNo">
+            <objects>
+                <viewController id="C78-ch-LFX" customClass="SquareCameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hH5-lP-f3m"/>
+                        <viewControllerLayoutGuide type="bottom" id="zpn-qK-yyQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="NFZ-kG-F3S">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tm6-hr-8iC">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="hMP-zT-mWe" appends="YES" id="wcL-Go-jj9"/>
+                                    <outletCollection property="gestureRecognizers" destination="vnV-Hn-Luk" appends="YES" id="aNa-VT-Wu4"/>
+                                </connections>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vas-sk-kV7">
+                                <rect key="frame" x="272.5" y="520" width="55" height="30"/>
+                                <state key="normal" title="Capture">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="captureStillImage:" destination="C78-ch-LFX" eventType="touchUpInside" id="PTu-eT-7Kk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-00-RFM">
+                                <rect key="frame" x="20" y="40" width="39" height="30"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="C78-ch-LFX" eventType="touchUpInside" id="r1y-MB-Aph"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eWp-jD-Dss">
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
+                                <state key="normal" title="LED">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleLED:" destination="C78-ch-LFX" eventType="touchUpInside" id="PrR-Yc-KSf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EnT-SM-5Ct">
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
+                                <state key="normal" title="Camera">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleCamera:" destination="C78-ch-LFX" eventType="touchUpInside" id="TXM-6q-cv1"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2Db-00-RFM" firstAttribute="leading" secondItem="Tm6-hr-8iC" secondAttribute="leading" constant="20" id="1Kc-fs-kgy"/>
+                            <constraint firstItem="eWp-jD-Dss" firstAttribute="top" secondItem="EnT-SM-5Ct" secondAttribute="top" id="AcE-4X-k8I"/>
+                            <constraint firstItem="Tm6-hr-8iC" firstAttribute="leading" secondItem="NFZ-kG-F3S" secondAttribute="leading" id="CWv-fG-9k7"/>
+                            <constraint firstItem="Tm6-hr-8iC" firstAttribute="top" secondItem="NFZ-kG-F3S" secondAttribute="top" id="CaC-Pi-cLi"/>
+                            <constraint firstItem="zpn-qK-yyQ" firstAttribute="top" secondItem="Tm6-hr-8iC" secondAttribute="bottom" id="JtM-qX-npv"/>
+                            <constraint firstItem="2Db-00-RFM" firstAttribute="top" secondItem="EnT-SM-5Ct" secondAttribute="top" id="LkA-rp-kdH"/>
+                            <constraint firstItem="EnT-SM-5Ct" firstAttribute="leading" secondItem="eWp-jD-Dss" secondAttribute="trailing" constant="20" id="Sih-qc-UX5"/>
+                            <constraint firstItem="EnT-SM-5Ct" firstAttribute="top" secondItem="hH5-lP-f3m" secondAttribute="bottom" constant="20" id="T0E-Qo-5XH"/>
+                            <constraint firstAttribute="trailing" secondItem="EnT-SM-5Ct" secondAttribute="trailing" constant="20" id="Xtg-VX-lQ0"/>
+                            <constraint firstAttribute="centerX" secondItem="vas-sk-kV7" secondAttribute="centerX" id="u3K-jz-kdA"/>
+                            <constraint firstAttribute="trailing" secondItem="Tm6-hr-8iC" secondAttribute="trailing" id="vRx-Ih-FaX"/>
+                            <constraint firstItem="zpn-qK-yyQ" firstAttribute="top" secondItem="vas-sk-kV7" secondAttribute="bottom" constant="50" id="zj8-UO-2FC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraPreview" destination="Tm6-hr-8iC" id="x7e-Up-RgJ"/>
+                        <outlet property="captureStillImageButton" destination="vas-sk-kV7" id="X23-cm-0c2"/>
+                        <outlet property="focusGestureRecognizer" destination="P4T-e1-WWu" id="s2b-Ol-sD6"/>
+                        <outlet property="toggleCameraButton" destination="EnT-SM-5Ct" id="zEt-dD-hco"/>
+                        <outlet property="toggleLEDButton" destination="eWp-jD-Dss" id="GSW-ol-Mev"/>
+                        <outlet property="zoomGestureRecognizer" destination="9c9-yn-L7z" id="F2W-Bw-dIi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Aft-JZ-gcn" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="hMP-zT-mWe">
+                    <connections>
+                        <action selector="zoomGestureRecognized:" destination="C78-ch-LFX" id="Zpq-8b-NxN"/>
+                        <outlet property="delegate" destination="C78-ch-LFX" id="2ml-3I-kD5"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <tapGestureRecognizer id="vnV-Hn-Luk">
+                    <connections>
+                        <action selector="focusGestureRecognized:" destination="C78-ch-LFX" id="ysR-oF-tpg"/>
+                        <outlet property="delegate" destination="C78-ch-LFX" id="gf4-uX-LCP"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="385" y="750"/>
+        </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="b1N-iB-Poa">
+            <objects>
+                <viewController id="zZO-Eb-Ept" customClass="CameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="h7Q-gB-q5n"/>
+                        <viewControllerLayoutGuide type="bottom" id="c9R-aJ-e0j"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GPX-Qr-YZd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NCt-fy-JYm">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="ogf-aF-ROM" appends="YES" id="1LS-tr-phe"/>
+                                    <outletCollection property="gestureRecognizers" destination="1FR-0t-H19" appends="YES" id="mbR-Xl-wjO"/>
+                                </connections>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBh-6k-IBL">
+                                <rect key="frame" x="272.5" y="520" width="55" height="30"/>
+                                <state key="normal" title="Capture">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="captureStillImage:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="rKA-Pi-NUO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LzP-mM-9dL">
+                                <rect key="frame" x="20" y="40" width="39" height="30"/>
+                                <state key="normal" title="Close"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPd-RZ-MTB">
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
+                                <state key="normal" title="LED">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleLED:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="AJ2-yo-fsW"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Fl-YN-eYX">
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
+                                <state key="normal" title="Camera">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleCamera:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="CMv-MY-yDm"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="NCt-fy-JYm" firstAttribute="leading" secondItem="GPX-Qr-YZd" secondAttribute="leading" id="64u-Pj-rcb"/>
+                            <constraint firstItem="c9R-aJ-e0j" firstAttribute="top" secondItem="LBh-6k-IBL" secondAttribute="bottom" constant="50" id="8DZ-Ro-0CT"/>
+                            <constraint firstItem="6Fl-YN-eYX" firstAttribute="top" secondItem="h7Q-gB-q5n" secondAttribute="bottom" constant="20" id="97a-Qm-HZ6"/>
+                            <constraint firstAttribute="centerX" secondItem="LBh-6k-IBL" secondAttribute="centerX" id="CmU-cM-87n"/>
+                            <constraint firstAttribute="trailing" secondItem="6Fl-YN-eYX" secondAttribute="trailing" constant="20" id="JR7-SU-ybt"/>
+                            <constraint firstItem="LzP-mM-9dL" firstAttribute="leading" secondItem="NCt-fy-JYm" secondAttribute="leading" constant="20" id="Kxw-6A-Cwr"/>
+                            <constraint firstItem="CPd-RZ-MTB" firstAttribute="top" secondItem="6Fl-YN-eYX" secondAttribute="top" id="R5m-FL-aAc"/>
+                            <constraint firstItem="NCt-fy-JYm" firstAttribute="top" secondItem="GPX-Qr-YZd" secondAttribute="top" id="S5B-hc-JZv"/>
+                            <constraint firstItem="6Fl-YN-eYX" firstAttribute="leading" secondItem="CPd-RZ-MTB" secondAttribute="trailing" constant="20" id="Xh7-5e-8jg"/>
+                            <constraint firstItem="LzP-mM-9dL" firstAttribute="top" secondItem="6Fl-YN-eYX" secondAttribute="top" id="bob-5k-law"/>
+                            <constraint firstAttribute="trailing" secondItem="NCt-fy-JYm" secondAttribute="trailing" id="icR-Rd-fvu"/>
+                            <constraint firstItem="c9R-aJ-e0j" firstAttribute="top" secondItem="NCt-fy-JYm" secondAttribute="bottom" id="pqI-U6-B67"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraPreview" destination="NCt-fy-JYm" id="hA6-ps-ovo"/>
+                        <outlet property="captureStillImageButton" destination="LBh-6k-IBL" id="G36-nG-mjO"/>
+                        <outlet property="focusGestureRecognizer" destination="P4T-e1-WWu" id="ONz-JV-tO2"/>
+                        <outlet property="toggleCameraButton" destination="6Fl-YN-eYX" id="D1D-BM-Ot4"/>
+                        <outlet property="toggleLEDButton" destination="CPd-RZ-MTB" id="PgW-rX-8Hv"/>
+                        <outlet property="zoomGestureRecognizer" destination="9c9-yn-L7z" id="uJf-jp-8BQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0vx-hp-Kxn" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="ogf-aF-ROM">
+                    <connections>
+                        <action selector="zoomGestureRecognized:" destination="zZO-Eb-Ept" id="QV8-7U-gbT"/>
+                        <outlet property="delegate" destination="zZO-Eb-Ept" id="Go2-rx-Tmz"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <tapGestureRecognizer id="1FR-0t-H19">
+                    <connections>
+                        <action selector="focusGestureRecognized:" destination="zZO-Eb-Ept" id="tBD-nK-9ZO"/>
+                        <outlet property="delegate" destination="zZO-Eb-Ept" id="zY1-vI-3dr"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="385" y="1482"/>
         </scene>
     </scenes>
 </document>

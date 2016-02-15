@@ -1,16 +1,8 @@
-//
-//  ViewController.swift
-//  CameraKitExample
-//
-//  Created by Justin Makaila on 4/5/15.
-//  Copyright (c) 2015 Present, Inc. All rights reserved.
-//
-
 import UIKit
 import CameraKit
 import AssetsLibrary
 
-class ViewController: UIViewController {
+class CameraViewController: UIViewController {
     @IBOutlet
     private var cameraPreview: UIView!
     
@@ -35,8 +27,6 @@ class ViewController: UIViewController {
     private var focusGestureRecognizer: UITapGestureRecognizer!
     
     private var cameraController: CameraController!
-    
-    private var captureStillImage: Bool = false
     
     private var currentPinchGestureScale: CGFloat = 0.0
     private var currentZoomScale: CGFloat = 1.0
@@ -79,7 +69,12 @@ class ViewController: UIViewController {
     
     @IBAction
     func captureStillImage(sender: UIButton) {
-        cameraController.captureStillImage()
+        do {
+            try cameraController.captureStillImage()
+        }
+        catch {
+            print("Could not capture still image")
+        }
     }
     
     @IBAction
@@ -113,12 +108,17 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction
+    func closeButtonPressed(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     func successfullySavedImage(image: UIImage, error: NSError, context: UnsafeMutablePointer<Void>) {
         print("Successfully saved image!")
     }
 }
 
-extension ViewController: UIGestureRecognizerDelegate {
+extension CameraViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == zoomGestureRecognizer {
             currentPinchGestureScale = currentZoomScale
@@ -128,7 +128,7 @@ extension ViewController: UIGestureRecognizerDelegate {
     }
 }
 
-extension ViewController: CameraControllerDelegate {
+extension CameraViewController: CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputImage image: UIImage) {
         saveImageToCameraRoll(image)
     }
@@ -147,18 +147,22 @@ extension ViewController: CameraControllerDelegate {
     }
 }
 
-private extension ViewController {
+internal extension CameraViewController {
     func saveImageToCameraRoll(image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, self, "successfullySavedImage:error:context:", nil)
     }
 }
 
-private extension ViewController {
+private extension CameraViewController {
     func setup() {
         cameraPreview.frame = view.bounds
         
-        cameraController = CameraController(view: cameraPreview)
-        cameraController.delegate = self
+        do {
+            cameraController = try CameraController(view: cameraPreview)
+            cameraController.delegate = self
+        } catch {
+            fatalError("Could not setup camera controller")
+        }
         
         do {
             try cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: [.MixWithOthers, .DefaultToSpeaker])
