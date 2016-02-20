@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7C51851A1C31B3D900B8CB53 /* CameraKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7C5185161C31B39700B8CB53 /* CameraKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7C95B3751C78B2E6006AF210 /* StillImageCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C95B3741C78B2E6006AF210 /* StillImageCameraViewController.swift */; };
+		7C95B3761C78B2E6006AF210 /* StillImageCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C95B3741C78B2E6006AF210 /* StillImageCameraViewController.swift */; };
 		7CB039121AD2180600536804 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039111AD2180600536804 /* AppDelegate.swift */; };
 		7CB039141AD2180600536804 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039131AD2180600536804 /* CameraViewController.swift */; };
 		7CB039171AD2180600536804 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CB039151AD2180600536804 /* Main.storyboard */; };
@@ -59,6 +61,7 @@
 /* Begin PBXFileReference section */
 		7C5185111C31B39700B8CB53 /* CameraKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CameraKit.xcodeproj; path = ../../CameraKit.xcodeproj; sourceTree = "<group>"; };
 		7C77F0001B0272D50012BC93 /* CameraKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CameraKit.framework; path = "../../../../../../Library/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos/CameraKit.framework"; sourceTree = "<group>"; };
+		7C95B3741C78B2E6006AF210 /* StillImageCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StillImageCameraViewController.swift; sourceTree = "<group>"; };
 		7CB0390C1AD2180600536804 /* CameraKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB039101AD2180600536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB039111AD2180600536804 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +128,7 @@
 				7CB039131AD2180600536804 /* CameraViewController.swift */,
 				7CF91A831C6D162E00D04FB9 /* SquareCameraViewController.swift */,
 				7CF91A851C6D27CA00D04FB9 /* TextDetectionViewController.swift */,
+				7C95B3741C78B2E6006AF210 /* StillImageCameraViewController.swift */,
 				7CB039151AD2180600536804 /* Main.storyboard */,
 				7CB039181AD2180600536804 /* Images.xcassets */,
 				7CB0391A1AD2180600536804 /* LaunchScreen.xib */,
@@ -282,6 +286,7 @@
 				7CB039141AD2180600536804 /* CameraViewController.swift in Sources */,
 				7CF91A861C6D27CA00D04FB9 /* TextDetectionViewController.swift in Sources */,
 				7CB039121AD2180600536804 /* AppDelegate.swift in Sources */,
+				7C95B3751C78B2E6006AF210 /* StillImageCameraViewController.swift in Sources */,
 				7CF91A841C6D162E00D04FB9 /* SquareCameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,6 +297,7 @@
 			files = (
 				7CB039281AD2180600536804 /* CameraKitExampleTests.swift in Sources */,
 				7CF91A871C6D27CA00D04FB9 /* TextDetectionViewController.swift in Sources */,
+				7C95B3761C78B2E6006AF210 /* StillImageCameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
