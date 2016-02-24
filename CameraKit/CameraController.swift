@@ -36,6 +36,11 @@ public class CameraController: NSObject {
         
         case PhotoModeNotEnabled
         case AudioCaptureNotEnabled
+        
+        case NoVideoDevice
+        case NoAudioDevice
+        
+        case CouldNotLockVideoDevice
     
         // TODO: This should be expanded upon to provide specific errors for each point where AVFoundation can fail
         case AVFoundationError(NSError)
@@ -137,7 +142,11 @@ public class CameraController: NSObject {
         if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) where (videoConnection.enabled && videoConnection.active) {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
-                guard let image = UIImage(data: imageData) else { return }
+                guard let image = UIImage(data: imageData)
+                else {
+                    return
+                }
+                
                 self.delegate?.cameraController(self, didOutputImage: image)
             })
         } else {
@@ -164,19 +173,31 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 
 // TODO: This group of methods should throw specific errors indicating what happend for lightweight error handling for consumers
 public extension CameraController {
+    private func lockVideoDevice(videoDevice: AVCaptureDevice, configure: AVCaptureDevice -> Void) throws {
+        do {
+            try videoDevice.lockForConfiguration()
+            configure(videoDevice)
+            videoDevice.unlockForConfiguration()
+        } catch {
+            throw Error.CouldNotLockVideoDevice
+        }
+    }
+    
     // MARK: Focus
     /**
         TODO: Support setting the focus mode with point defaulting to previewLayer.center
      */
     func setFocusMode(focusMode: AVCaptureFocusMode, atPoint point: CGPoint) throws {
         let focusPoint = previewLayer.captureDevicePointOfInterestForPoint(point)
+        guard let videoDevice = currentVideoDevice
+        else {
+            throw Error.NoVideoDevice
+        }
         
-        if let videoDevice = currentVideoDevice {
-            if videoDevice.focusPointOfInterestSupported && videoDevice.isFocusModeSupported(focusMode) {
-                try videoDevice.lockForConfiguration()
-                videoDevice.focusPointOfInterest = focusPoint
-                videoDevice.focusMode = focusMode
-                videoDevice.unlockForConfiguration()
+        if videoDevice.focusPointOfInterestSupported && videoDevice.isFocusModeSupported(focusMode) {
+            try lockVideoDevice(videoDevice) {
+                $0.focusPointOfInterest = focusPoint
+                $0.focusMode = focusMode
             }
         }
     }
@@ -190,10 +211,10 @@ public extension CameraController {
         
         if let videoDevice = currentVideoDevice {
             if videoDevice.exposurePointOfInterestSupported && videoDevice.isExposureModeSupported(exposureMode) {
-                try videoDevice.lockForConfiguration()
-                videoDevice.exposurePointOfInterest = exposurePoint
-                videoDevice.exposureMode = exposureMode
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                	$0.exposurePointOfInterest = exposurePoint
+                    $0.exposureMode = exposureMode
+                }
             }
         }
     }
@@ -202,9 +223,9 @@ public extension CameraController {
     func setWhiteBalanceMode(whiteBalanceMode: AVCaptureWhiteBalanceMode) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.isWhiteBalanceModeSupported(whiteBalanceMode) {
-                try videoDevice.lockForConfiguration()
-                videoDevice.whiteBalanceMode = whiteBalanceMode
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.whiteBalanceMode = whiteBalanceMode
+                }
             }
         }
     }
@@ -213,9 +234,9 @@ public extension CameraController {
     func setLowLightBoost(automaticallyEnabled: Bool = true) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.lowLightBoostSupported {
-                try videoDevice.lockForConfiguration()
-                videoDevice.automaticallyEnablesLowLightBoostWhenAvailable = automaticallyEnabled
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.automaticallyEnablesLowLightBoostWhenAvailable = automaticallyEnabled
+                }
             }
         }
     }
@@ -224,9 +245,9 @@ public extension CameraController {
     func setTorchMode(mode: AVCaptureTorchMode) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.hasTorch && videoDevice.torchAvailable {
-                try videoDevice.lockForConfiguration()
-                videoDevice.torchMode = mode
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.torchMode = mode
+                }
             }
         }
     }
@@ -234,18 +255,16 @@ public extension CameraController {
     func toggleLED() throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.hasTorch && videoDevice.torchAvailable {
-                try videoDevice.lockForConfiguration()
-                
-                switch(videoDevice.torchMode) {
-                case .Off:
-                    videoDevice.torchMode = .On
-                case .On:
-                    videoDevice.torchMode = .Off
-                default:
-                    break
+                try lockVideoDevice(videoDevice) { videoDevice in
+                    switch(videoDevice.torchMode) {
+                    case .Off:
+                        videoDevice.torchMode = .On
+                    case .On:
+                        videoDevice.torchMode = .Off
+                    default:
+                        break
+                    }
                 }
-                
-                videoDevice.unlockForConfiguration()
             }
         }
     }
@@ -254,10 +273,10 @@ public extension CameraController {
     func setZoom(zoomLevel: CGFloat) throws -> Bool {
         if let videoDevice = currentVideoDevice {
             if zoomLevel <= MaxZoomFactor && zoomLevel >= 1 {
-                try videoDevice.lockForConfiguration()
-                
-                videoDevice.videoZoomFactor = zoomLevel
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.videoZoomFactor = zoomLevel
+                }
+
                 return true
             }
         }
@@ -333,7 +352,6 @@ private extension CameraController {
         }
         
         if setupVideoDevices {
-            print("Setting up video devices")
             try self.setupVideoDevices()
             try setupVideoDeviceInput()
             setupVideoDeviceOutput()
@@ -341,14 +359,12 @@ private extension CameraController {
         }
         
         if setupAudioDevices {
-            print("Setting up audio devices")
             try setupAudioDeviceInput()
             setupAudioDeviceOutput()
             setupAudioConnection()
         }
         
         if setupStillImageInput {
-            print("Setup still image output")
             setupStillImageOutput()
         }
     }
