@@ -1,8 +1,8 @@
 import UIKit
 import CameraKit
-import AssetsLibrary
 
-class CameraViewController: UIViewController {
+
+class StillImageCameraViewController: UIViewController {
     @IBOutlet
     private var cameraPreview: UIView!
     
@@ -118,7 +118,7 @@ class CameraViewController: UIViewController {
     }
 }
 
-extension CameraViewController: UIGestureRecognizerDelegate {
+extension StillImageCameraViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == zoomGestureRecognizer {
             currentPinchGestureScale = currentZoomScale
@@ -128,7 +128,7 @@ extension CameraViewController: UIGestureRecognizerDelegate {
     }
 }
 
-extension CameraViewController: CameraControllerDelegate {
+extension StillImageCameraViewController: CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputImage image: UIImage) {
         saveImageToCameraRoll(image)
     }
@@ -142,18 +142,18 @@ extension CameraViewController: CameraControllerDelegate {
     func cameraController(controller: CameraController, didStartCaptureSession started: Bool) { }
 }
 
-internal extension CameraViewController {
+internal extension StillImageCameraViewController {
     func saveImageToCameraRoll(image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, self, "successfullySavedImage:error:context:", nil)
     }
 }
 
-private extension CameraViewController {
+private extension StillImageCameraViewController {
     func setup() {
         cameraPreview.frame = view.bounds
         
         do {
-            cameraController = try CameraController(view: cameraPreview)
+            cameraController = try CameraController(view: cameraPreview, captureModes: [.Photo])
             cameraController.delegate = self
         } catch {
             fatalError("Could not setup camera controller")
@@ -164,8 +164,5 @@ private extension CameraViewController {
         } catch {
             print("Could not configure audio sessions with desired settings")
         }
-        
-        //cameraController.setLowLightBoost()
     }
 }
-

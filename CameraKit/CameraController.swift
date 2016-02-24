@@ -15,26 +15,9 @@ private let AudioOutputQueueIdentifier = CameraKitDomain + ".audioQueue"
 
 private let MaxZoomFactor: CGFloat = 8.0
 
-enum CameraControllerError: ErrorType {
-    case InvalidStillImageOutputConnection
-    
-    // TODO: This should be expanded upon to provide specific errors for each point where AVFoundation can fail
-    case AVFoundationError(NSError)
-}
-
 public protocol CameraControllerDelegate {
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType)
     func cameraController(controller: CameraController, didOutputImage image: UIImage)
-}
-
-private protocol CameraControllerConfiguration {
-    var captureMode: CameraController.CaptureMode { get }
-    var orientation: AVCaptureVideoOrientation { get }
-    
-    var audioSessionCategory: String { get }
-    var audioSessionCategoryOptions: AVAudioSessionCategoryOptions { get }
-    
-    var stillImageOutputSettings: [String: AnyObject] { get }
 }
 
 public class CameraController: NSObject {
@@ -43,17 +26,24 @@ public class CameraController: NSObject {
         case Video
     }
     
-    ///   This be used to enable:
-    ///      CameraController(view, [.Video, .Photo])
-    ///      CameraController(view, .Video)
-    ///      CameraController(view, .Photo)
-    ///
-    ///      CameraController([.Video, .Photo])
-    ///      CameraController(.Video)
-    ///      CameraController(.Photo)
     public enum CaptureMode {
         case Video
         case Photo
+    }
+    
+    public enum Error: ErrorType {
+        case InvalidStillImageOutputConnection
+        
+        case PhotoModeNotEnabled
+        case AudioCaptureNotEnabled
+        
+        case NoVideoDevice
+        case NoAudioDevice
+        
+        case CouldNotLockVideoDevice
+    
+        // TODO: This should be expanded upon to provide specific errors for each point where AVFoundation can fail
+        case AVFoundationError(NSError)
     }
     
     public var delegate: CameraControllerDelegate?
@@ -67,12 +57,13 @@ public class CameraController: NSObject {
         }
     }
     
+    private let captureModes: Set<CaptureMode>
+    
     private var paused: Bool = false
     private var configuringCaptureSession: Bool = false
     
     private var frontCameraDevice: AVCaptureDevice?
     private var backCameraDevice: AVCaptureDevice?
-    private var audioCaptureDevice: AVCaptureDevice?
     
     private var frontCameraDeviceInput: AVCaptureDeviceInput?
     private var backCameraDeviceInput: AVCaptureDeviceInput?
@@ -99,16 +90,20 @@ public class CameraController: NSObject {
         teardownCaptureSession()
     }
     
-    public init(captureMode: CaptureMode) throws {
+    public init(captureModes: Set<CaptureMode>) throws {
+        self.captureModes = captureModes
+        
         super.init()
         
-        try setup(captureMode)
+        try setup()
     }
     
-    public convenience init(view: UIView, captureMode: CaptureMode = .Video) throws {
-        try self.init(captureMode: captureMode)
-        
-        previewLayer.connection.videoOrientation = .Portrait
+    public convenience init(captureMode: CaptureMode) throws {
+        try self.init(captureModes: [captureMode])
+    }
+    
+    public convenience init(view: UIView, captureModes: Set<CaptureMode> = [.Video]) throws {
+        try self.init(captureModes: captureModes)
         
         let rootLayer = view.layer
         rootLayer.masksToBounds = true
@@ -125,25 +120,37 @@ public class CameraController: NSObject {
     }
     
     public func configureAudioSession(category: String, options: AVAudioSessionCategoryOptions) throws {
+        if !captureModes.contains(.Video) {
+            throw Error.AudioCaptureNotEnabled
+        }
+        
         let audioSession = AVAudioSession.sharedInstance()
         
         do {
             try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .MixWithOthers)
             try audioSession.setActive(true)
         } catch let error as NSError {
-            throw CameraControllerError.AVFoundationError(error)
+            throw Error.AVFoundationError(error)
         }
     }
     
     public func captureStillImage() throws {
+        if !captureModes.contains(.Photo) {
+            throw Error.PhotoModeNotEnabled
+        }
+        
         if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) where (videoConnection.enabled && videoConnection.active) {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
-                guard let image = UIImage(data: imageData) else { return }
+                guard let image = UIImage(data: imageData)
+                else {
+                    return
+                }
+                
                 self.delegate?.cameraController(self, didOutputImage: image)
             })
         } else {
-            throw CameraControllerError.InvalidStillImageOutputConnection
+            throw Error.InvalidStillImageOutputConnection
         }
     }
 }
@@ -166,19 +173,31 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 
 // TODO: This group of methods should throw specific errors indicating what happend for lightweight error handling for consumers
 public extension CameraController {
+    private func lockVideoDevice(videoDevice: AVCaptureDevice, configure: AVCaptureDevice -> Void) throws {
+        do {
+            try videoDevice.lockForConfiguration()
+            configure(videoDevice)
+            videoDevice.unlockForConfiguration()
+        } catch {
+            throw Error.CouldNotLockVideoDevice
+        }
+    }
+    
     // MARK: Focus
     /**
         TODO: Support setting the focus mode with point defaulting to previewLayer.center
      */
     func setFocusMode(focusMode: AVCaptureFocusMode, atPoint point: CGPoint) throws {
         let focusPoint = previewLayer.captureDevicePointOfInterestForPoint(point)
+        guard let videoDevice = currentVideoDevice
+        else {
+            throw Error.NoVideoDevice
+        }
         
-        if let videoDevice = currentVideoDevice {
-            if videoDevice.focusPointOfInterestSupported && videoDevice.isFocusModeSupported(focusMode) {
-                try videoDevice.lockForConfiguration()
-                videoDevice.focusPointOfInterest = focusPoint
-                videoDevice.focusMode = focusMode
-                videoDevice.unlockForConfiguration()
+        if videoDevice.focusPointOfInterestSupported && videoDevice.isFocusModeSupported(focusMode) {
+            try lockVideoDevice(videoDevice) {
+                $0.focusPointOfInterest = focusPoint
+                $0.focusMode = focusMode
             }
         }
     }
@@ -192,10 +211,10 @@ public extension CameraController {
         
         if let videoDevice = currentVideoDevice {
             if videoDevice.exposurePointOfInterestSupported && videoDevice.isExposureModeSupported(exposureMode) {
-                try videoDevice.lockForConfiguration()
-                videoDevice.exposurePointOfInterest = exposurePoint
-                videoDevice.exposureMode = exposureMode
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                	$0.exposurePointOfInterest = exposurePoint
+                    $0.exposureMode = exposureMode
+                }
             }
         }
     }
@@ -204,9 +223,9 @@ public extension CameraController {
     func setWhiteBalanceMode(whiteBalanceMode: AVCaptureWhiteBalanceMode) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.isWhiteBalanceModeSupported(whiteBalanceMode) {
-                try videoDevice.lockForConfiguration()
-                videoDevice.whiteBalanceMode = whiteBalanceMode
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.whiteBalanceMode = whiteBalanceMode
+                }
             }
         }
     }
@@ -215,9 +234,9 @@ public extension CameraController {
     func setLowLightBoost(automaticallyEnabled: Bool = true) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.lowLightBoostSupported {
-                try videoDevice.lockForConfiguration()
-                videoDevice.automaticallyEnablesLowLightBoostWhenAvailable = automaticallyEnabled
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.automaticallyEnablesLowLightBoostWhenAvailable = automaticallyEnabled
+                }
             }
         }
     }
@@ -226,9 +245,9 @@ public extension CameraController {
     func setTorchMode(mode: AVCaptureTorchMode) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.hasTorch && videoDevice.torchAvailable {
-                try videoDevice.lockForConfiguration()
-                videoDevice.torchMode = mode
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.torchMode = mode
+                }
             }
         }
     }
@@ -236,18 +255,16 @@ public extension CameraController {
     func toggleLED() throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.hasTorch && videoDevice.torchAvailable {
-                try videoDevice.lockForConfiguration()
-                
-                switch(videoDevice.torchMode) {
-                case .Off:
-                    videoDevice.torchMode = .On
-                case .On:
-                    videoDevice.torchMode = .Off
-                default:
-                    break
+                try lockVideoDevice(videoDevice) { videoDevice in
+                    switch(videoDevice.torchMode) {
+                    case .Off:
+                        videoDevice.torchMode = .On
+                    case .On:
+                        videoDevice.torchMode = .Off
+                    default:
+                        break
+                    }
                 }
-                
-                videoDevice.unlockForConfiguration()
             }
         }
     }
@@ -256,10 +273,10 @@ public extension CameraController {
     func setZoom(zoomLevel: CGFloat) throws -> Bool {
         if let videoDevice = currentVideoDevice {
             if zoomLevel <= MaxZoomFactor && zoomLevel >= 1 {
-                try videoDevice.lockForConfiguration()
-                
-                videoDevice.videoZoomFactor = zoomLevel
-                videoDevice.unlockForConfiguration()
+                try lockVideoDevice(videoDevice) {
+                    $0.videoZoomFactor = zoomLevel
+                }
+
                 return true
             }
         }
@@ -309,52 +326,57 @@ public extension CameraController {
 // MARK: - Setup Methods
 
 private extension CameraController {
-    func setup(captureMode: CaptureMode) throws {
+    func setup() throws {
+        try setupCaptureSession()
         setupPreviewLayer()
-        try setupCaptureSession(captureMode)
     }
     
     func setupPreviewLayer() {
         previewLayer.session = captureSession
         previewLayer.videoGravity = AVVideoScalingModeFit
+        previewLayer.connection.videoOrientation = .Portrait
     }
     
-    func setupCaptureSession(captureMode: CaptureMode) throws {
+    func setupCaptureSession() throws {
+        let setupVideoDevices = (captureModes.contains(.Video) || captureModes.contains(.Photo))
+        let setupAudioDevices = !(captureModes.contains(.Photo))
+        let setupStillImageInput = !setupAudioDevices
+        let usePhotoCaptureSessionPreset = captureModes.count == 1 && captureModes.contains(.Photo)
+        
         captureSession.automaticallyConfiguresApplicationAudioSession = false
         
-        // Set the session preset
-        captureSession.sessionPreset = AVCaptureSessionPresetHigh
+        if usePhotoCaptureSessionPreset {
+            captureSession.sessionPreset = AVCaptureSessionPresetPhoto
+        } else {
+            captureSession.sessionPreset = AVCaptureSessionPresetHigh
+        }
         
-        // Setup capture devices
-        try setupCaptureDevices()
-
-        // TODO: Use the capture mode to configure which devices are set up
-        // TODO: Photo is video, no audio, still image output
-        // TODO: Video is video and audio, no still image output
+        if setupVideoDevices {
+            try self.setupVideoDevices()
+            try setupVideoDeviceInput()
+            setupVideoDeviceOutput()
+            setupVideoConnection()
+        }
         
-        try setupVideoDeviceInput()
-        try setupAudioDeviceInput()
+        if setupAudioDevices {
+            try setupAudioDeviceInput()
+            setupAudioDeviceOutput()
+            setupAudioConnection()
+        }
         
-        // Setup device outputs
-        setupVideoDeviceOutput()
-        setupAudioDeviceOutput()
-        setupStillImageOutput()
-        
-        // Setup connections
-        setupVideoConnection()
-        setupAudioConnection()
+        if setupStillImageInput {
+            setupStillImageOutput()
+        }
     }
 }
 
 // MARK: - Capture Session Utilities
 
 private extension CameraController {
-    func setupCaptureDevices() throws {
+    func setupVideoDevices() throws {
         frontCameraDevice = videoDeviceForPosition(.Front)
         backCameraDevice = videoDeviceForPosition(.Back)
-        audioCaptureDevice = defaultAudioDevice
         
-        // TODO: This should result in a failure during setup, but for now is handled by marking the device inputs as nil
         frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice)
         backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice)
     }
