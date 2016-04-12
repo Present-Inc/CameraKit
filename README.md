@@ -8,7 +8,7 @@ The easiest way to get camera frames showing up on screen. Written in Swift.
 - [x] Usage examples
 - [ ] CocoaPods Support
 - [x] Still Image Capture
-- [ ] Event handling beyond notification center (start, stop, failure, interrupted. Sounds like a job for RAC)
+- [ ] Event handling beyond notification center
 
 ### Features
 
