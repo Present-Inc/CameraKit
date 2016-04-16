@@ -1,11 +1,3 @@
-//
-//  CameraController.swift
-//  CameraKit
-//
-//  Created by Justin Makaila on 4/5/15.
-//  Copyright (c) 2015 Present, Inc. All rights reserved.
-//
-
 import UIKit
 import CoreGraphics
 
@@ -34,6 +26,7 @@ public class CameraController: NSObject {
     public enum Error: ErrorType {
         case InvalidStillImageOutputConnection
         
+        case VideoModeNotEnabled
         case PhotoModeNotEnabled
         case AudioCaptureNotEnabled
         
@@ -112,15 +105,19 @@ public class CameraController: NSObject {
     }
     
     public func startCaptureSession() {
-        captureSession.startRunning()
+        if !captureSession.running {
+            captureSession.startRunning()
+        }
     }
     
     public func stopCaptureSession() {
-        captureSession.stopRunning()
+        if captureSession.running {
+            captureSession.stopRunning()
+        }
     }
     
     public func configureAudioSession(category: String, options: AVAudioSessionCategoryOptions) throws {
-        if !captureModes.contains(.Video) {
+        if !videoModeEnabled {
             throw Error.AudioCaptureNotEnabled
         }
         
@@ -135,7 +132,7 @@ public class CameraController: NSObject {
     }
     
     public func captureStillImage() throws {
-        if !captureModes.contains(.Photo) {
+        if !photoModeEnabled {
             throw Error.PhotoModeNotEnabled
         }
         
@@ -151,6 +148,51 @@ public class CameraController: NSObject {
             })
         } else {
             throw Error.InvalidStillImageOutputConnection
+        }
+    }
+    
+    public func setSlowMotion() throws {
+        if !videoModeEnabled {
+            throw Error.VideoModeNotEnabled
+        }
+        
+        guard let videoDevice = backCameraDevice
+        else {
+            throw Error.NoVideoDevice
+        }
+        
+        let deviceFormats = videoDevice.formats as? [AVCaptureDeviceFormat] ?? []
+        
+        var bestFormat: AVCaptureDeviceFormat?
+        var bestFrameRateRange: AVFrameRateRange!
+        
+        for format in deviceFormats {
+            guard let frameRateRanges = format.videoSupportedFrameRateRanges as? [AVFrameRateRange]
+            else {
+                continue
+            }
+            
+            for range in frameRateRanges {
+                guard let frameRateRange = bestFrameRateRange
+                else {
+                    bestFormat = format
+                    bestFrameRateRange = range
+                    continue
+                }
+                
+                if range.maxFrameRate > frameRateRange.maxFrameRate {
+                    bestFormat = format
+                    bestFrameRateRange = range
+                }
+            }
+        }
+        
+        if let bestFormat = bestFormat {
+            try lockVideoDevice(videoDevice) {
+                $0.activeFormat = bestFormat
+                $0.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration
+                $0.activeVideoMaxFrameDuration = bestFrameRateRange.maxFrameDuration
+            }
         }
     }
 }
@@ -171,7 +213,6 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 
 // MARK: - Camera Methods
 
-// TODO: This group of methods should throw specific errors indicating what happend for lightweight error handling for consumers
 public extension CameraController {
     private func lockVideoDevice(videoDevice: AVCaptureDevice, configure: AVCaptureDevice -> Void) throws {
         do {
@@ -184,9 +225,7 @@ public extension CameraController {
     }
     
     // MARK: Focus
-    /**
-        TODO: Support setting the focus mode with point defaulting to previewLayer.center
-     */
+    /// TODO: Support setting the focus mode with point defaulting to previewLayer.center
     func setFocusMode(focusMode: AVCaptureFocusMode, atPoint point: CGPoint) throws {
         let focusPoint = previewLayer.captureDevicePointOfInterestForPoint(point)
         guard let videoDevice = currentVideoDevice
@@ -203,9 +242,7 @@ public extension CameraController {
     }
     
     // MARK: Exposure
-    /**
-        TODO: Support setting the exposure mode with point defaulting to previewLayer.center
-     */
+    /// TODO: Support setting the exposure mode with point defaulting to previewLayer.center
     func setExposureMode(exposureMode: AVCaptureExposureMode, atPoint point: CGPoint) throws {
         let exposurePoint = previewLayer.captureDevicePointOfInterestForPoint(point)
         
@@ -286,9 +323,7 @@ public extension CameraController {
     
     // MARK: Camera Position
     
-    /**
-        Convenience method for toggling the camera position.
-    */
+    /// Convenience method for toggling the camera position.
     func toggleCameraPosition() -> Bool {
         cameraPosition = (cameraPosition == .Back) ? .Front : .Back
         return true
@@ -338,10 +373,10 @@ private extension CameraController {
     }
     
     func setupCaptureSession() throws {
-        let setupVideoDevices = (captureModes.contains(.Video) || captureModes.contains(.Photo))
-        let setupAudioDevices = !(captureModes.contains(.Photo))
+        let setupVideoDevices = (videoModeEnabled || photoModeEnabled)
+        let setupAudioDevices = !(photoModeEnabled)
         let setupStillImageInput = !setupAudioDevices
-        let usePhotoCaptureSessionPreset = captureModes.count == 1 && captureModes.contains(.Photo)
+        let usePhotoCaptureSessionPreset = captureModes.count == 1 && photoModeEnabled
         
         captureSession.automaticallyConfiguresApplicationAudioSession = false
         
@@ -478,7 +513,19 @@ private extension CameraController {
     }
 }
 
-// MARK: - AVFoundation Utilities
+// MARK: - Computed Properties
+
+private extension CameraController {
+    var photoModeEnabled: Bool {
+        return captureModes.contains(.Photo)
+    }
+    
+    var videoModeEnabled: Bool {
+        return captureModes.contains(.Video)
+    }
+}
+
+// MARK: AVFoundation Utilities
 
 private extension CameraController {
     var inputDevices: [AVCaptureDeviceInput] {

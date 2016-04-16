@@ -3,6 +3,9 @@ import CameraKit
 import AssetsLibrary
 
 class CameraViewController: UIViewController {
+    var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
+    var cameraController: CameraController!
+    
     @IBOutlet
     private var cameraPreview: UIView!
     
@@ -26,8 +29,6 @@ class CameraViewController: UIViewController {
     @IBOutlet
     private var focusGestureRecognizer: UITapGestureRecognizer!
     
-    private var cameraController: CameraController!
-    
     private var currentPinchGestureScale: CGFloat = 0.0
     private var currentZoomScale: CGFloat = 1.0
 
@@ -50,7 +51,8 @@ class CameraViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        cameraPreview.frame = view.bounds;
+        super.viewDidLayoutSubviews()
+        cameraController.previewLayer.frame = cameraPreview.bounds
     }
     
     @IBAction
@@ -73,7 +75,7 @@ class CameraViewController: UIViewController {
             try cameraController.captureStillImage()
         }
         catch {
-            print("Could not capture still image")
+            print("Could not capture still image", error)
         }
     }
     
@@ -112,10 +114,6 @@ class CameraViewController: UIViewController {
     func closeButtonPressed(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-    
-    func successfullySavedImage(image: UIImage, error: NSError, context: UnsafeMutablePointer<Void>) {
-        print("Successfully saved image!")
-    }
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
@@ -129,9 +127,7 @@ extension CameraViewController: UIGestureRecognizerDelegate {
 }
 
 extension CameraViewController: CameraControllerDelegate {
-    func cameraController(controller: CameraController, didOutputImage image: UIImage) {
-        saveImageToCameraRoll(image)
-    }
+    func cameraController(controller: CameraController, didOutputImage image: UIImage) { }
     
     func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) {
         // TODO: Process video and audio frames here
@@ -142,18 +138,10 @@ extension CameraViewController: CameraControllerDelegate {
     func cameraController(controller: CameraController, didStartCaptureSession started: Bool) { }
 }
 
-internal extension CameraViewController {
-    func saveImageToCameraRoll(image: UIImage) {
-        UIImageWriteToSavedPhotosAlbum(image, self, "successfullySavedImage:error:context:", nil)
-    }
-}
-
 private extension CameraViewController {
     func setup() {
-        cameraPreview.frame = view.bounds
-        
         do {
-            cameraController = try CameraController(view: cameraPreview)
+            cameraController = try CameraController(view: cameraPreview, captureModes: captureModes)
             cameraController.delegate = self
         } catch {
             fatalError("Could not setup camera controller")
@@ -164,8 +152,6 @@ private extension CameraViewController {
         } catch {
             print("Could not configure audio sessions with desired settings")
         }
-        
-        //cameraController.setLowLightBoost()
     }
 }
 

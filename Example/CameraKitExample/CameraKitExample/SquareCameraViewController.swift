@@ -2,41 +2,38 @@ import UIKit
 import CameraKit
 
 
-class SquareCameraViewController: CameraViewController {
+class SquareCameraViewController: StillImageCameraViewController {
     override func cameraController(controller: CameraController, didOutputImage image: UIImage) {
         processImage(image)
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     private func processImage(image: UIImage) {
-        guard let cgImage = image.CGImage
-        else {
-            fatalError("Could not extract CGImage from UIImage")
-        }
+        let inputSize = image.size
+        let outputSideLength: CGFloat = 1024.0
+        let outputSize = CGSize(width: outputSideLength, height: outputSideLength)
+        let scale = max(outputSideLength / inputSize.width, outputSideLength / inputSize.height)
+        let scaledInputSize = CGSizeMake(inputSize.width * scale, inputSize.height * scale)
+        /// TODO: Figure out the real center by overlaying the `cameraMask` over the preview layer
+        let center = CGPoint(x: outputSize.width / 2, y: outputSize.height / 2)
+        let outputRect = CGRect(
+            x: center.x - scaledInputSize.width / 2.0,
+            y: center.y - scaledInputSize.height / 2.0,
+            width: scaledInputSize.width,
+            height: scaledInputSize.height
+        )
         
-        var imageHeight = image.size.height
-        var imageWidth = image.size.width
+        UIGraphicsBeginImageContextWithOptions(outputSize, true, 0)
         
-        if imageHeight > imageWidth {
-            imageHeight = imageWidth
-        } else {
-            imageWidth = imageHeight
-        }
+        image.drawInRect(outputRect)
         
-        let size = CGSize(width: imageWidth, height: imageHeight)
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         
-        let referenceSize: (width: CGFloat, height: CGFloat) = (CGFloat(CGImageGetWidth(cgImage)), CGFloat(CGImageGetHeight(cgImage)))
+        UIGraphicsEndImageContext()
         
-        let x = (referenceSize.width - size.width) / 2
-        let y = (referenceSize.height - size.height) / 2
-        
-        let cropRect = CGRectMake(x, y, size.width, size.height)
-        guard let imageRef = CGImageCreateWithImageInRect(cgImage, cropRect)
-        else {
-            fatalError("Could not create image in rect")
-        }
-        
-        let croppedImage = UIImage(CGImage: imageRef, scale: 0, orientation: image.imageOrientation)
-        
-        saveImageToCameraRoll(croppedImage)
+        saveImageToCameraRoll(scaledImage)
     }
 }
