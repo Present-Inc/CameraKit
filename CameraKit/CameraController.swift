@@ -20,6 +20,7 @@ public class CameraController: NSObject {
     
     public enum CaptureMode {
         case Video
+        case SlowMotionVideo
         case Photo
     }
     
@@ -151,11 +152,7 @@ public class CameraController: NSObject {
         }
     }
     
-    public func setSlowMotion() throws {
-        if !videoModeEnabled {
-            throw Error.VideoModeNotEnabled
-        }
-        
+    private func setSlowMotion() throws {
         guard let videoDevice = backCameraDevice
         else {
             throw Error.NoVideoDevice
@@ -330,6 +327,10 @@ public extension CameraController {
     }
     
     private func setCamera(position: AVCaptureDevicePosition) -> Bool {
+        if slowMotionEnabled && position != .Back {
+            return false
+        }
+        
         let deviceInput = position == .Front ? frontCameraDeviceInput : backCameraDeviceInput
         
         if let deviceInput = deviceInput {
@@ -402,6 +403,10 @@ private extension CameraController {
         if setupStillImageInput {
             setupStillImageOutput()
         }
+        
+        if slowMotionEnabled {
+            try self.setSlowMotion()
+        }
     }
 }
 
@@ -412,8 +417,12 @@ private extension CameraController {
         frontCameraDevice = videoDeviceForPosition(.Front)
         backCameraDevice = videoDeviceForPosition(.Back)
         
-        frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice)
-        backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice)
+        do {
+            frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice)
+            backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice)
+        } catch let error as NSError {
+            throw Error.AVFoundationError(error)
+        }
     }
     
     func setupVideoDeviceInput() throws {
@@ -421,8 +430,12 @@ private extension CameraController {
             captureSession.removeInput(videoInput)
         }
         
-        videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice)
-        addInput(videoDeviceInput)
+        do {
+            videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice)
+            addInput(videoDeviceInput)
+        } catch let error as NSError {
+            throw Error.AVFoundationError(error)
+        }
     }
     
     func setupAudioDeviceInput() throws {
@@ -430,8 +443,12 @@ private extension CameraController {
             captureSession.removeInput(audioInput)
         }
         
-        audioDeviceInput = try AVCaptureDeviceInput(device: defaultAudioDevice)
-        addInput(audioDeviceInput)
+        do {
+            audioDeviceInput = try AVCaptureDeviceInput(device: defaultAudioDevice)
+            addInput(audioDeviceInput)
+        } catch let error as NSError {
+            throw Error.AVFoundationError(error)
+        }
     }
     
     func setupVideoDeviceOutput() {
@@ -521,7 +538,11 @@ private extension CameraController {
     }
     
     var videoModeEnabled: Bool {
-        return captureModes.contains(.Video)
+        return captureModes.contains(.Video) || slowMotionEnabled
+    }
+    
+    var slowMotionEnabled: Bool {
+        return captureModes.contains(.SlowMotionVideo)
     }
 }
 
@@ -585,8 +606,12 @@ private extension CameraController {
     }
     
     func replaceCurrentVideoDeviceWithDevice(device: AVCaptureDevice) throws {
-        let deviceInput = try AVCaptureDeviceInput(device: device)
-        replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput)
+        do {
+            let deviceInput = try AVCaptureDeviceInput(device: device)
+            replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput)
+        } catch let error as NSError {
+            throw Error.AVFoundationError(error)
+        }
     }
     
     func replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput: AVCaptureDeviceInput) {
@@ -602,8 +627,12 @@ private extension CameraController {
     }
     
     func replaceCurrentAudioDeviceWithDevice(device: AVCaptureDevice) throws {
-        let deviceInput = try AVCaptureDeviceInput(device: device)
-        replaceCurrentAudioDeviceInputWithDeviceInput(deviceInput)
+        do {
+            let deviceInput = try AVCaptureDeviceInput(device: device)
+            replaceCurrentAudioDeviceInputWithDeviceInput(deviceInput)
+        } catch let error as NSError {
+            throw Error.AVFoundationError(error)
+        }
     }
     
     func replaceCurrentAudioDeviceInputWithDeviceInput(deviceInput: AVCaptureDeviceInput) {
