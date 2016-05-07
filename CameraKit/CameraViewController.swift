@@ -10,23 +10,45 @@ public class CameraViewController: UIViewController {
     
     // Toggle camera button
     @IBOutlet
-    var toggleCameraButton: UIButton?
+    var toggleCameraButton: UIButton? {
+        didSet {
+            toggleCameraButton?.addTarget(self, action: #selector(CameraViewController.toggleCamera(_:)), forControlEvents: .TouchUpInside)
+        }
+    }
     
     // Toggle LED button
     @IBOutlet
-    var toggleLEDButton: UIButton?
+    var toggleLEDButton: UIButton? {
+        didSet {
+            toggleLEDButton?.addTarget(self, action: #selector(CameraViewController.toggleLED(_:)), forControlEvents: .TouchUpInside)
+        }
+    }
     
     // Capture still image
     @IBOutlet
-    var captureStillImageButton: UIButton?
+    var captureStillImageButton: UIButton? {
+        didSet {
+            captureStillImageButton?.addTarget(self, action: #selector(CameraViewController.captureStillImage(_:)), forControlEvents: .TouchUpInside)
+        }
+    }
     
     // Zoom gesture
     @IBOutlet
-    var zoomGestureRecognizer: UIPinchGestureRecognizer!
+    var zoomGestureRecognizer: UIPinchGestureRecognizer? {
+        didSet {
+            zoomGestureRecognizer?.delegate = self
+            zoomGestureRecognizer?.addTarget(self, action: #selector(CameraViewController.zoomGestureRecognized(_:)))
+        }
+    }
     
     // Tap to focus
     @IBOutlet
-    var focusGestureRecognizer: UITapGestureRecognizer!
+    var focusGestureRecognizer: UITapGestureRecognizer? {
+        didSet {
+            focusGestureRecognizer?.delegate = self
+            focusGestureRecognizer?.addTarget(self, action: #selector(CameraViewController.focusGestureRecognized(_:)))
+        }
+    }
     
     private var currentPinchGestureScale: CGFloat = 0.0
     private var currentZoomScale: CGFloat = 1.0
@@ -79,10 +101,10 @@ public class CameraViewController: UIViewController {
     }
     
     @IBAction
-    func zoomGestureRecognized(sender: UIGestureRecognizer) {
+    func zoomGestureRecognized(sender: UIPinchGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
-        let newZoomScale: CGFloat = currentPinchGestureScale * zoomGestureRecognizer.scale
+        let newZoomScale: CGFloat = currentPinchGestureScale * sender.scale
         
         // If the new zoom scale is within the possible range, update the current zoom scale,
         // and set the camera controller's zoom to it.
@@ -95,9 +117,9 @@ public class CameraViewController: UIViewController {
     }
     
     @IBAction
-    func focusGestureRecognized(sender: UIGestureRecognizer) {
+    func focusGestureRecognized(sender: UITapGestureRecognizer) {
         // Locate point of recognized tap gesture
-        let focusPoint = focusGestureRecognizer.locationInView(cameraPreview)
+        let focusPoint = sender.locationInView(cameraPreview)
         
         // Update camera controller's focus & exposure modes to continuously auto-focus on the
         // point of the tap gesture.
