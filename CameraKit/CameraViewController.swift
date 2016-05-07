@@ -131,7 +131,8 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
         }
     }
     
-    
+    public func cameraController(controller: CameraController, didOutputImage image: UIImage) { }
+    public func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) { }
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
