@@ -1,7 +1,7 @@
 import UIKit
 import AssetsLibrary
 
-public class CameraViewController: UIViewController {
+public class CameraViewController: UIViewController, CameraControllerDelegate {
     public var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
     private(set) var cameraController: CameraController!
     
@@ -130,6 +130,8 @@ public class CameraViewController: UIViewController {
             print("Could not set focus or exposure mode")
         }
     }
+    
+    
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
@@ -140,11 +142,6 @@ extension CameraViewController: UIGestureRecognizerDelegate {
         
         return true
     }
-}
-
-extension CameraViewController: CameraControllerDelegate {
-    public func cameraController(controller: CameraController, didOutputImage image: UIImage) { }
-    public func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) { }
 }
 
 private extension CameraViewController {
