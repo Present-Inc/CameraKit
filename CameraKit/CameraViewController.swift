@@ -1,56 +1,55 @@
 import UIKit
-import CameraKit
 import AssetsLibrary
 
-class CameraViewController: UIViewController {
-    var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
-    var cameraController: CameraController!
+public class CameraViewController: UIViewController {
+    public var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
+    private(set) var cameraController: CameraController!
     
     @IBOutlet
-    private var cameraPreview: UIView!
+    var cameraPreview: UIView!
     
     // Toggle camera button
     @IBOutlet
-    private var toggleCameraButton: UIButton!
+    var toggleCameraButton: UIButton?
     
     // Toggle LED button
     @IBOutlet
-    private var toggleLEDButton: UIButton!
+    var toggleLEDButton: UIButton?
     
     // Capture still image
     @IBOutlet
-    private var captureStillImageButton: UIButton!
+    var captureStillImageButton: UIButton?
     
     // Zoom gesture
     @IBOutlet
-    private var zoomGestureRecognizer: UIPinchGestureRecognizer!
+    var zoomGestureRecognizer: UIPinchGestureRecognizer!
     
     // Tap to focus
     @IBOutlet
-    private var focusGestureRecognizer: UITapGestureRecognizer!
+    var focusGestureRecognizer: UITapGestureRecognizer!
     
     private var currentPinchGestureScale: CGFloat = 0.0
     private var currentZoomScale: CGFloat = 1.0
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         setup()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    public override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
         cameraController.startCaptureSession()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    public override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
         cameraController.stopCaptureSession()
     }
     
-    override func viewDidLayoutSubviews() {
+    public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         cameraController.previewLayer.frame = cameraPreview.bounds
     }
@@ -65,7 +64,7 @@ class CameraViewController: UIViewController {
         do {
             try cameraController.toggleLED()
         } catch {
-            print("Could not toggle LED. Update button state to reflect this")
+            print("Could not toggle LED", error)
         }
     }
     
@@ -109,15 +108,10 @@ class CameraViewController: UIViewController {
             print("Could not set focus or exposure mode")
         }
     }
-    
-    @IBAction
-    func closeButtonPressed(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == zoomGestureRecognizer {
             currentPinchGestureScale = currentZoomScale
         }
@@ -127,15 +121,8 @@ extension CameraViewController: UIGestureRecognizerDelegate {
 }
 
 extension CameraViewController: CameraControllerDelegate {
-    func cameraController(controller: CameraController, didOutputImage image: UIImage) { }
-    
-    func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) {
-        // TODO: Process video and audio frames here
-    }
-    
-    func cameraController(controller: CameraController, didEncounterError error: NSError) { }
-    
-    func cameraController(controller: CameraController, didStartCaptureSession started: Bool) { }
+    public func cameraController(controller: CameraController, didOutputImage image: UIImage) { }
+    public func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) { }
 }
 
 private extension CameraViewController {

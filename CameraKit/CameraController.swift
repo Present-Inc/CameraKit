@@ -35,6 +35,8 @@ public class CameraController: NSObject {
         case NoAudioDevice
         
         case CouldNotLockVideoDevice
+        
+        case NoSuitableFormatForSlowMotion
     
         // TODO: This should be expanded upon to provide specific errors for each point where AVFoundation can fail
         case AVFoundationError(NSError)
@@ -190,6 +192,8 @@ public class CameraController: NSObject {
                 $0.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration
                 $0.activeVideoMaxFrameDuration = bestFrameRateRange.maxFrameDuration
             }
+        } else {
+            throw Error.NoSuitableFormatForSlowMotion
         }
     }
 }
@@ -374,7 +378,7 @@ private extension CameraController {
     }
     
     func setupCaptureSession() throws {
-        let setupVideoDevices = (videoModeEnabled || photoModeEnabled)
+        let setupVideoDevices = (videoModeEnabled || photoModeEnabled || slowMotionEnabled)
         let setupAudioDevices = !(photoModeEnabled)
         let setupStillImageInput = !setupAudioDevices
         let usePhotoCaptureSessionPreset = captureModes.count == 1 && photoModeEnabled
@@ -538,7 +542,7 @@ private extension CameraController {
     }
     
     var videoModeEnabled: Bool {
-        return captureModes.contains(.Video) || slowMotionEnabled
+        return captureModes.contains(.Video)
     }
     
     var slowMotionEnabled: Bool {
