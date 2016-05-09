@@ -3,7 +3,7 @@ import AssetsLibrary
 
 public class CameraViewController: UIViewController, CameraControllerDelegate {
     public var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
-    private(set) var cameraController: CameraController!
+    public private(set) var cameraController: CameraController!
     
     @IBOutlet
     public var cameraPreview: UIView!
