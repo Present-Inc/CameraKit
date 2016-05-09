@@ -6,11 +6,11 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     private(set) var cameraController: CameraController!
     
     @IBOutlet
-    var cameraPreview: UIView!
+    public var cameraPreview: UIView!
     
     // Toggle camera button
     @IBOutlet
-    var toggleCameraButton: UIButton? {
+    public var toggleCameraButton: UIButton? {
         didSet {
             toggleCameraButton?.addTarget(self, action: #selector(CameraViewController.toggleCamera(_:)), forControlEvents: .TouchUpInside)
         }
@@ -18,7 +18,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     
     // Toggle LED button
     @IBOutlet
-    var toggleLEDButton: UIButton? {
+    public var toggleLEDButton: UIButton? {
         didSet {
             toggleLEDButton?.addTarget(self, action: #selector(CameraViewController.toggleLED(_:)), forControlEvents: .TouchUpInside)
         }
@@ -26,7 +26,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     
     // Capture still image
     @IBOutlet
-    var captureStillImageButton: UIButton? {
+    public var captureStillImageButton: UIButton? {
         didSet {
             captureStillImageButton?.addTarget(self, action: #selector(CameraViewController.captureStillImage(_:)), forControlEvents: .TouchUpInside)
         }
@@ -34,7 +34,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     
     // Zoom gesture
     @IBOutlet
-    var zoomGestureRecognizer: UIPinchGestureRecognizer? {
+    public var zoomGestureRecognizer: UIPinchGestureRecognizer? {
         didSet {
             zoomGestureRecognizer?.delegate = self
             zoomGestureRecognizer?.addTarget(self, action: #selector(CameraViewController.zoomGestureRecognized(_:)))
@@ -43,7 +43,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     
     // Tap to focus
     @IBOutlet
-    var focusGestureRecognizer: UITapGestureRecognizer? {
+    public var focusGestureRecognizer: UITapGestureRecognizer? {
         didSet {
             focusGestureRecognizer?.delegate = self
             focusGestureRecognizer?.addTarget(self, action: #selector(CameraViewController.focusGestureRecognized(_:)))
