@@ -18,16 +18,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7C87AC111CE116BA0084F600 /* PBXContainerItemProxy */ = {
+		7C92BDB91CE11A3C00191260 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 7C87AC0D1CE116BA0084F600 /* CameraKit.xcodeproj */;
+			containerPortal = 7C92BDB51CE11A3C00191260 /* CameraKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 7CB038E51AD2059500536804;
 			remoteInfo = CameraKit;
 		};
-		7C87AC131CE116BF0084F600 /* PBXContainerItemProxy */ = {
+		7C92BDBB1CE11A4300191260 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 7C87AC0D1CE116BA0084F600 /* CameraKit.xcodeproj */;
+			containerPortal = 7C92BDB51CE11A3C00191260 /* CameraKit.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 7CB038E41AD2059500536804;
 			remoteInfo = CameraKit;
@@ -48,7 +48,7 @@
 
 /* Begin PBXFileReference section */
 		7C77F0001B0272D50012BC93 /* CameraKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CameraKit.framework; path = "../../../../../../Library/Developer/Xcode/DerivedData/CameraKit-bykaapacsaalkcajtsodzpvfjwsx/Build/Products/Debug-iphoneos/CameraKit.framework"; sourceTree = "<group>"; };
-		7C87AC0D1CE116BA0084F600 /* CameraKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CameraKit.xcodeproj; path = ../../CameraKit.xcodeproj; sourceTree = "<group>"; };
+		7C92BDB51CE11A3C00191260 /* CameraKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CameraKit.xcodeproj; path = ../../../CameraKit.xcodeproj; sourceTree = "<group>"; };
 		7C95B3741C78B2E6006AF210 /* StillImageCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StillImageCameraViewController.swift; sourceTree = "<group>"; };
 		7CB0390C1AD2180600536804 /* CameraKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CB039101AD2180600536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -72,10 +72,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7C87AC0E1CE116BA0084F600 /* Products */ = {
+		7C92BDB61CE11A3C00191260 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7C87AC121CE116BA0084F600 /* CameraKit.framework */,
+				7C92BDBA1CE11A3C00191260 /* CameraKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,7 +83,6 @@
 		7CB039031AD2180600536804 = {
 			isa = PBXGroup;
 			children = (
-				7C87AC0D1CE116BA0084F600 /* CameraKit.xcodeproj */,
 				7CB0390E1AD2180600536804 /* CameraKitExample */,
 				7CB0390D1AD2180600536804 /* Products */,
 			);
@@ -100,6 +99,7 @@
 		7CB0390E1AD2180600536804 /* CameraKitExample */ = {
 			isa = PBXGroup;
 			children = (
+				7C92BDB51CE11A3C00191260 /* CameraKit.xcodeproj */,
 				7CB039111AD2180600536804 /* AppDelegate.swift */,
 				7CF91A831C6D162E00D04FB9 /* SquareCameraViewController.swift */,
 				7CF91A851C6D27CA00D04FB9 /* TextDetectionViewController.swift */,
@@ -137,7 +137,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				7C87AC141CE116BF0084F600 /* PBXTargetDependency */,
+				7C92BDBC1CE11A4300191260 /* PBXTargetDependency */,
 			);
 			name = CameraKitExample;
 			productName = CameraKitExample;
@@ -173,8 +173,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 7C87AC0E1CE116BA0084F600 /* Products */;
-					ProjectRef = 7C87AC0D1CE116BA0084F600 /* CameraKit.xcodeproj */;
+					ProductGroup = 7C92BDB61CE11A3C00191260 /* Products */;
+					ProjectRef = 7C92BDB51CE11A3C00191260 /* CameraKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -185,11 +185,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		7C87AC121CE116BA0084F600 /* CameraKit.framework */ = {
+		7C92BDBA1CE11A3C00191260 /* CameraKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = CameraKit.framework;
-			remoteRef = 7C87AC111CE116BA0084F600 /* PBXContainerItemProxy */;
+			remoteRef = 7C92BDB91CE11A3C00191260 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -223,10 +223,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7C87AC141CE116BF0084F600 /* PBXTargetDependency */ = {
+		7C92BDBC1CE11A4300191260 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CameraKit;
-			targetProxy = 7C87AC131CE116BF0084F600 /* PBXContainerItemProxy */;
+			targetProxy = 7C92BDBB1CE11A4300191260 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
