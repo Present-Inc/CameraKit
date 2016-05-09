@@ -4,7 +4,4 @@
    <FileRef
       location = "group:Example/CameraKitExample/CameraKitExample.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "container:CameraKit.xcodeproj">
-   </FileRef>
 </Workspace>

@@ -55,19 +55,16 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         setup()
     }
     
     public override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
         cameraController.startCaptureSession()
     }
     
     public override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        
         cameraController.stopCaptureSession()
     }
     
@@ -77,12 +74,12 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    func toggleCamera(sender: UIButton) {
+    public func toggleCamera(sender: UIButton) {
         cameraController.toggleCameraPosition()
     }
     
     @IBAction
-    func toggleLED(sender: UIButton) {
+    public func toggleLED(sender: UIButton) {
         do {
             try cameraController.toggleLED()
         } catch {
@@ -91,7 +88,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    func captureStillImage(sender: UIButton) {
+    public func captureStillImage(sender: UIButton) {
         do {
             try cameraController.captureStillImage()
         }
@@ -101,7 +98,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    func zoomGestureRecognized(sender: UIPinchGestureRecognizer) {
+    public func zoomGestureRecognized(sender: UIPinchGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
         let newZoomScale: CGFloat = currentPinchGestureScale * sender.scale
@@ -117,7 +114,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    func focusGestureRecognized(sender: UITapGestureRecognizer) {
+    public func focusGestureRecognized(sender: UITapGestureRecognizer) {
         // Locate point of recognized tap gesture
         let focusPoint = sender.locationInView(cameraPreview)
         

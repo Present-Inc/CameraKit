@@ -24,6 +24,16 @@ public class CameraController: NSObject {
         case Photo
     }
     
+    /// Implement the output mode
+    /*
+     /// Only applicable to `CaptureMode.Video` or `CaptureModel.SlowMotionVideo`
+     public enum OutputMode {
+        case MovieFile
+        case SampleBuffer
+     }
+     
+     */
+    
     public enum Error: ErrorType {
         case InvalidStillImageOutputConnection
         
@@ -71,7 +81,7 @@ public class CameraController: NSObject {
     // Capture session output
     private var videoDeviceOutput: AVCaptureVideoDataOutput?
     private var audioDeviceOutput: AVCaptureAudioDataOutput?
-    private var stillImageOutput: AVCaptureStillImageOutput = AVCaptureStillImageOutput()
+    private var stillImageOutput: AVCaptureStillImageOutput?
     
     // Capture session connections
     private var videoConnection: AVCaptureConnection?
@@ -139,8 +149,8 @@ public class CameraController: NSObject {
             throw Error.PhotoModeNotEnabled
         }
         
-        if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) where (videoConnection.enabled && videoConnection.active) {
-            stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
+        if let videoConnection = stillImageOutput?.connectionWithMediaType(AVMediaTypeVideo) where (videoConnection.enabled && videoConnection.active) {
+            stillImageOutput?.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
                 guard let image = UIImage(data: imageData)
                 else {
@@ -409,7 +419,7 @@ private extension CameraController {
         }
         
         if slowMotionEnabled {
-            try self.setSlowMotion()
+            try setSlowMotion()
         }
     }
 }
@@ -487,7 +497,13 @@ private extension CameraController {
     }
     
     func setupStillImageOutput() {
-        stillImageOutput.outputSettings = [
+        if let _ = stillImageOutput {
+            return
+        }
+        
+        stillImageOutput = AVCaptureStillImageOutput()
+        
+        stillImageOutput?.outputSettings = [
             AVVideoCodecKey: AVVideoCodecJPEG
         ]
         

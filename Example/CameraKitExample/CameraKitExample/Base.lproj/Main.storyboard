@@ -113,9 +113,6 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-00-RFM">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
-                                <connections>
-                                    <action selector="closeButtonPressed:" destination="C78-ch-LFX" eventType="touchUpInside" id="r1y-MB-Aph"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eWp-jD-Dss">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -175,7 +172,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-735" y="1482"/>
+            <point key="canvasLocation" x="-712" y="1482"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="b1N-iB-Poa">
@@ -210,9 +207,6 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LzP-mM-9dL">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
-                                <connections>
-                                    <action selector="closeButtonPressed:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="kq5-VE-4va"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPd-RZ-MTB">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -270,7 +264,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1379" y="1482"/>
+            <point key="canvasLocation" x="-1356" y="1482"/>
         </scene>
         <!--Still Image Camera View Controller-->
         <scene sceneID="9fv-69-KXC">
@@ -305,9 +299,6 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fv7-QD-52O">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
-                                <connections>
-                                    <action selector="closeButtonPressed:" destination="zrx-0I-p1H" eventType="touchUpInside" id="daK-YO-TMb"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HVg-k1-ems">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -365,7 +356,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1182" y="1482"/>
+            <point key="canvasLocation" x="593" y="1482"/>
         </scene>
         <!--Slow Motion Camera View Controller-->
         <scene sceneID="JwM-Qq-QTU">
@@ -400,9 +391,6 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="By4-gf-O2G">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
-                                <connections>
-                                    <action selector="closeButtonPressed:" destination="EbW-7l-AKV" eventType="touchUpInside" id="Xd0-mb-y2L"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ukH-1e-8Yf">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -462,7 +450,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="545" y="1482"/>
+            <point key="canvasLocation" x="-44" y="1482"/>
         </scene>
     </scenes>
 </document>
