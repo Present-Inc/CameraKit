@@ -2,7 +2,7 @@ import UIKit
 import CameraKit
 
 
-class SquareCameraViewController: StillImageCameraViewController {
+final class SquareCameraViewController: StillImageCameraViewController {
     override func cameraController(controller: CameraController, didOutputImage image: UIImage) {
         processImage(image)
     }

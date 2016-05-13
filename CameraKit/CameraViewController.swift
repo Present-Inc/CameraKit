@@ -150,12 +150,6 @@ private extension CameraViewController {
         } catch {
             fatalError("Could not setup camera controller")
         }
-        
-        do {
-            try cameraController.configureAudioSession(AVAudioSessionCategoryPlayAndRecord, options: [.MixWithOthers, .DefaultToSpeaker])
-        } catch {
-            print("Could not configure audio sessions with desired settings")
-        }
     }
 }
 

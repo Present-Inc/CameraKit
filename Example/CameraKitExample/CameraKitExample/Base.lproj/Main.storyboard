@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="0wy-sR-Mbk">
-                                <rect key="frame" x="20" y="189.5" width="560" height="221"/>
+                                <rect key="frame" x="20" y="190" width="560" height="221"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CameraKit Example" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s3g-u7-6zv">
                                         <rect key="frame" x="0.0" y="0.0" width="560" height="21"/>
@@ -113,6 +113,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-00-RFM">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="C78-ch-LFX" eventType="touchUpInside" id="mv9-ph-vzR"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eWp-jD-Dss">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -174,10 +177,10 @@
             </objects>
             <point key="canvasLocation" x="-712" y="1482"/>
         </scene>
-        <!--Camera View Controller-->
+        <!--Video Camera View Controller-->
         <scene sceneID="b1N-iB-Poa">
             <objects>
-                <viewController id="zZO-Eb-Ept" customClass="CameraViewController" customModule="CameraKit" sceneMemberID="viewController">
+                <viewController id="zZO-Eb-Ept" customClass="VideoCameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="h7Q-gB-q5n"/>
                         <viewControllerLayoutGuide type="bottom" id="c9R-aJ-e0j"/>
@@ -200,13 +203,13 @@
                                 <state key="normal" title="Capture">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="captureStillImage:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="rKA-Pi-NUO"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LzP-mM-9dL">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="rzM-rz-7eU"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPd-RZ-MTB">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -245,9 +248,11 @@
                     </view>
                     <connections>
                         <outlet property="cameraPreview" destination="NCt-fy-JYm" id="hA6-ps-ovo"/>
-                        <outlet property="captureStillImageButton" destination="LBh-6k-IBL" id="G36-nG-mjO"/>
+                        <outlet property="captureButton" destination="LBh-6k-IBL" id="9m9-7E-ogG"/>
+                        <outlet property="focusGestureRecognizer" destination="1FR-0t-H19" id="xPy-pR-AVb"/>
                         <outlet property="toggleCameraButton" destination="6Fl-YN-eYX" id="D1D-BM-Ot4"/>
                         <outlet property="toggleLEDButton" destination="CPd-RZ-MTB" id="PgW-rX-8Hv"/>
+                        <outlet property="zoomGestureRecognizer" destination="ogf-aF-ROM" id="tr7-NZ-VG3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0vx-hp-Kxn" sceneMemberID="firstResponder"/>
@@ -299,6 +304,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fv7-QD-52O">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="zrx-0I-p1H" eventType="touchUpInside" id="TAl-g6-hNB"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HVg-k1-ems">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -338,8 +346,10 @@
                     <connections>
                         <outlet property="cameraPreview" destination="A87-ip-WvD" id="5yT-Yr-oZf"/>
                         <outlet property="captureStillImageButton" destination="DUL-Wk-bIt" id="h3t-en-d4l"/>
+                        <outlet property="focusGestureRecognizer" destination="PWL-WG-POK" id="lWu-Z4-LUA"/>
                         <outlet property="toggleCameraButton" destination="6SE-Yr-H1k" id="kvF-lT-mAF"/>
                         <outlet property="toggleLEDButton" destination="HVg-k1-ems" id="OrQ-uw-Uil"/>
+                        <outlet property="zoomGestureRecognizer" destination="gHQ-bb-LjH" id="aWU-H6-QZt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ER-7A-Lia" sceneMemberID="firstResponder"/>
@@ -384,13 +394,13 @@
                                 <state key="normal" title="Capture">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="captureStillImage:" destination="EbW-7l-AKV" eventType="touchUpInside" id="rm1-Qg-HzZ"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="By4-gf-O2G">
                                 <rect key="frame" x="20" y="40" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="EbW-7l-AKV" eventType="touchUpInside" id="gJC-6v-xYJ"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ukH-1e-8Yf">
                                 <rect key="frame" x="476" y="40" width="30" height="30"/>
@@ -429,7 +439,7 @@
                     </view>
                     <connections>
                         <outlet property="cameraPreview" destination="Qxa-Um-FdL" id="TtK-j1-Isc"/>
-                        <outlet property="captureStillImageButton" destination="LhB-V5-abW" id="ygc-Ga-urU"/>
+                        <outlet property="captureButton" destination="LhB-V5-abW" id="UDM-Kz-Ig0"/>
                         <outlet property="focusGestureRecognizer" destination="dDK-Od-8qn" id="zvJ-PK-vvt"/>
                         <outlet property="toggleCameraButton" destination="yB3-eG-z8x" id="dOb-6z-U2n"/>
                         <outlet property="toggleLEDButton" destination="ukH-1e-8Yf" id="15y-O3-Lms"/>
