@@ -1,40 +1,40 @@
 import UIKit
 import AssetsLibrary
 
-public class CameraViewController: UIViewController, CameraControllerDelegate {
-    public var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
-    public private(set) var cameraController: CameraController!
+open class CameraViewController: UIViewController, CameraControllerDelegate {
+    open var captureModes: Set<CameraController.CaptureMode> { return [.video] }
+    open fileprivate(set) var cameraController: CameraController!
     
     @IBOutlet
-    public var cameraPreview: UIView!
+    open var cameraPreview: UIView!
     
     // Toggle camera button
     @IBOutlet
-    public var toggleCameraButton: UIButton? {
+    open var toggleCameraButton: UIButton? {
         didSet {
-            toggleCameraButton?.addTarget(self, action: #selector(CameraViewController.toggleCamera(_:)), forControlEvents: .TouchUpInside)
+            toggleCameraButton?.addTarget(self, action: #selector(CameraViewController.toggleCamera(_:)), for: .touchUpInside)
         }
     }
     
     // Toggle LED button
     @IBOutlet
-    public var toggleLEDButton: UIButton? {
+    open var toggleLEDButton: UIButton? {
         didSet {
-            toggleLEDButton?.addTarget(self, action: #selector(CameraViewController.toggleLED(_:)), forControlEvents: .TouchUpInside)
+            toggleLEDButton?.addTarget(self, action: #selector(CameraViewController.toggleLED(_:)), for: .touchUpInside)
         }
     }
     
     // Capture still image
     @IBOutlet
-    public var captureStillImageButton: UIButton? {
+    open var captureStillImageButton: UIButton? {
         didSet {
-            captureStillImageButton?.addTarget(self, action: #selector(CameraViewController.captureStillImage(_:)), forControlEvents: .TouchUpInside)
+            captureStillImageButton?.addTarget(self, action: #selector(CameraViewController.captureStillImage(_:)), for: .touchUpInside)
         }
     }
     
     // Zoom gesture
     @IBOutlet
-    public var zoomGestureRecognizer: UIPinchGestureRecognizer? {
+    open var zoomGestureRecognizer: UIPinchGestureRecognizer? {
         didSet {
             zoomGestureRecognizer?.delegate = self
             zoomGestureRecognizer?.addTarget(self, action: #selector(CameraViewController.zoomGestureRecognized(_:)))
@@ -43,43 +43,43 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     
     // Tap to focus
     @IBOutlet
-    public var focusGestureRecognizer: UITapGestureRecognizer? {
+    open var focusGestureRecognizer: UITapGestureRecognizer? {
         didSet {
             focusGestureRecognizer?.delegate = self
             focusGestureRecognizer?.addTarget(self, action: #selector(CameraViewController.focusGestureRecognized(_:)))
         }
     }
     
-    private var currentPinchGestureScale: CGFloat = 0.0
-    private var currentZoomScale: CGFloat = 1.0
+    fileprivate var currentPinchGestureScale: CGFloat = 0.0
+    fileprivate var currentZoomScale: CGFloat = 1.0
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
     
-    public override func viewDidAppear(animated: Bool) {
+    open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         cameraController.startCaptureSession()
     }
     
-    public override func viewDidDisappear(animated: Bool) {
+    open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         cameraController.stopCaptureSession()
     }
     
-    public override func viewDidLayoutSubviews() {
+    open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         cameraController.previewLayer.frame = cameraPreview.bounds
     }
     
     @IBAction
-    public func toggleCamera(sender: UIButton) {
+    open func toggleCamera(_ sender: UIButton) {
         cameraController.toggleCameraPosition()
     }
     
     @IBAction
-    public func toggleLED(sender: UIButton) {
+    open func toggleLED(_ sender: UIButton) {
         do {
             try cameraController.toggleLED()
         } catch {
@@ -88,7 +88,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public func captureStillImage(sender: UIButton) {
+    open func captureStillImage(_ sender: UIButton) {
         do {
             try cameraController.captureStillImage()
         }
@@ -98,7 +98,7 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public func zoomGestureRecognized(sender: UIPinchGestureRecognizer) {
+    open func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
         let newZoomScale: CGFloat = currentPinchGestureScale * sender.scale
@@ -114,26 +114,26 @@ public class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public func focusGestureRecognized(sender: UITapGestureRecognizer) {
+    open func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
         // Locate point of recognized tap gesture
-        let focusPoint = sender.locationInView(cameraPreview)
+        let focusPoint = sender.location(in: cameraPreview)
         
         // Update camera controller's focus & exposure modes to continuously auto-focus on the
         // point of the tap gesture.
         do {
-            try cameraController.setFocusMode(AVCaptureFocusMode.ContinuousAutoFocus, atPoint: focusPoint)
-            try cameraController.setExposureMode(AVCaptureExposureMode.ContinuousAutoExposure, atPoint: focusPoint)
+            try cameraController.setFocusMode(AVCaptureFocusMode.continuousAutoFocus, atPoint: focusPoint)
+            try cameraController.setExposureMode(AVCaptureExposureMode.continuousAutoExposure, atPoint: focusPoint)
         } catch {
             print("Could not set focus or exposure mode")
         }
     }
     
-    public func cameraController(controller: CameraController, didOutputImage image: UIImage) { }
-    public func cameraController(controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBufferRef, type: CameraController.FrameType) { }
+    open func cameraController(_ controller: CameraController, didOutputImage image: UIImage) { }
+    open func cameraController(_ controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, type: CameraController.FrameType) { }
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
-    public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == zoomGestureRecognizer {
             currentPinchGestureScale = currentZoomScale
         }
