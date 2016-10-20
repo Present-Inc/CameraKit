@@ -7,7 +7,7 @@ private let AudioOutputQueueIdentifier = CameraKitDomain + ".audioQueue"
 
 private let MaxZoomFactor: CGFloat = 8.0
 
-public protocol CameraControllerDelegate {
+public protocol CameraControllerDelegate: class {
     func cameraController(_ controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, type: CameraController.FrameType)
     func cameraController(_ controller: CameraController, didOutputImage image: UIImage)
 }
@@ -42,7 +42,7 @@ open class CameraController: NSObject {
         case avFoundationError(NSError)
     }
     
-    open var delegate: CameraControllerDelegate?
+    open weak var delegate: CameraControllerDelegate?
     
     open let captureSession: AVCaptureSession = AVCaptureSession()
     open let previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
@@ -88,11 +88,11 @@ open class CameraController: NSObject {
         try setup()
     }
     
-    public convenience init(captureMode: CaptureMode) throws {
+    public convenience init(captureMode: CaptureMode = .video) throws {
         try self.init(captureModes: [captureMode])
     }
     
-    public convenience init(view: UIView, captureModes: Set<CaptureMode> = [.video]) throws {
+    public convenience init(view: UIView, captureModes: Set<CaptureMode>) throws {
         try self.init(captureModes: captureModes)
         
         let rootLayer = view.layer

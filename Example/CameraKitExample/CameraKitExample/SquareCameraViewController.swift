@@ -3,20 +3,20 @@ import CameraKit
 
 
 final class SquareCameraViewController: StillImageCameraViewController {
-    override func cameraController(controller: CameraController, didOutputImage image: UIImage) {
+    override func cameraController(_ controller: CameraController, didOutputImage image: UIImage) {
         processImage(image)
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    private func processImage(image: UIImage) {
+    fileprivate func processImage(_ image: UIImage) {
         let inputSize = image.size
         let outputSideLength: CGFloat = 1024.0
         let outputSize = CGSize(width: outputSideLength, height: outputSideLength)
         let scale = max(outputSideLength / inputSize.width, outputSideLength / inputSize.height)
-        let scaledInputSize = CGSizeMake(inputSize.width * scale, inputSize.height * scale)
+        let scaledInputSize = CGSize(width: inputSize.width * scale, height: inputSize.height * scale)
         /// TODO: Figure out the real center by overlaying the `cameraMask` over the preview layer
         let center = CGPoint(x: outputSize.width / 2, y: outputSize.height / 2)
         let outputRect = CGRect(
@@ -28,12 +28,16 @@ final class SquareCameraViewController: StillImageCameraViewController {
         
         UIGraphicsBeginImageContextWithOptions(outputSize, true, 0)
         
-        image.drawInRect(outputRect)
+        image.draw(in: outputRect)
         
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()
         
-        saveImageToCameraRoll(scaledImage)
+        if let scaledImage = scaledImage {
+            saveImageToCameraRoll(scaledImage)
+        } else {
+            print("Could not save image to camera roll")
+        }
     }
 }

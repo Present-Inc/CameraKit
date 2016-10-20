@@ -3,5 +3,5 @@ import CameraKit
 
 
 final class SlowMotionCameraViewController: VideoCameraViewController {
-    override var captureModes: Set<CameraController.CaptureMode> { return [.SlowMotionVideo] }
+    override var captureModes: Set<CameraController.CaptureMode> { return [.slowMotionVideo] }
 }

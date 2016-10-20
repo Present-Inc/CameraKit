@@ -3,17 +3,17 @@ import CameraKit
 
 
 class StillImageCameraViewController: BaseCameraViewController {
-    override var captureModes: Set<CameraController.CaptureMode> { return [.Photo] }
+    override var captureModes: Set<CameraController.CaptureMode> { return [.photo] }
     
-    override func cameraController(controller: CameraController, didOutputImage image: UIImage) {
+    override func cameraController(_ controller: CameraController, didOutputImage image: UIImage) {
         saveImageToCameraRoll(image)
     }
     
-    func saveImageToCameraRoll(image: UIImage) {
+    func saveImageToCameraRoll(_ image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(StillImageCameraViewController.successfullySavedImage(_:error:context:)), nil)
     }
     
-    func successfullySavedImage(image: UIImage, error: NSError, context: UnsafeMutablePointer<Void>) {
+    func successfullySavedImage(_ image: UIImage, error: NSError, context: UnsafeMutableRawPointer) {
         print("Successfully saved image!")
     }
 }

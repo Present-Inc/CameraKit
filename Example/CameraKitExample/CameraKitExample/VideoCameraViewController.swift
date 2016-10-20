@@ -4,49 +4,49 @@ import Photos
 
 
 class VideoCameraViewController: BaseCameraViewController {
-    override var captureModes: Set<CameraController.CaptureMode> { return [.Video] }
+    override var captureModes: Set<CameraController.CaptureMode> { return [.video] }
     
     @IBOutlet
-    private var captureButton: UIButton! {
+    fileprivate var captureButton: UIButton! {
         didSet {
-            captureButton.addTarget(self, action: #selector(toggleRecording(_:)), forControlEvents: .TouchUpInside)
+            captureButton.addTarget(self, action: #selector(toggleRecording(_:)), for: .touchUpInside)
         }
     }
     
-    private var recording: Bool = false
+    fileprivate var recording: Bool = false
     
-    private var movieFileOutput: AVCaptureMovieFileOutput!
+    fileprivate var movieFileOutput: AVCaptureMovieFileOutput!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
     
-    func toggleRecording(sender: UIButton) {
+    func toggleRecording(_ sender: UIButton) {
         recording = !recording
-        recording ? movieFileOutput.startRecordingToOutputFileURL(newOutputFileURL(), recordingDelegate: self) : movieFileOutput.stopRecording()
+        recording ? movieFileOutput.startRecording(toOutputFileURL: newOutputFileURL(), recordingDelegate: self) : movieFileOutput.stopRecording()
     }
 }
 
 extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
-    func newOutputFileURL() -> NSURL {
-        let outputPath = NSTemporaryDirectory() + "output\(NSDate().timeIntervalSince1970.description).mov"
-        return NSURL(fileURLWithPath: outputPath)
+    func newOutputFileURL() -> URL {
+        let outputPath = NSTemporaryDirectory() + "output\(Date().timeIntervalSince1970.description).mov"
+        return URL(fileURLWithPath: outputPath)
     }
     
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) { }
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        let alertController = UIAlertController(title: "Save", message: "Would you like to save this video?", preferredStyle: .Alert)
+    func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) { }
+    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
+        let alertController = UIAlertController(title: "Save", message: "Would you like to save this video?", preferredStyle: .alert)
         
-        alertController.addAction(UIAlertAction(title: "No", style: .Destructive, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Yes", style: .Cancel, handler: { _ in
+        alertController.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Yes", style: .cancel, handler: { _ in
             self.saveVideoFileAtURL(outputFileURL)
         }))
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
-    private func saveVideoFileAtURL(url: NSURL) {
+    fileprivate func saveVideoFileAtURL(_ url: URL) {
         findOrCreateAlbum("Camera Kit Example") { album in
             guard let album = album
             else {
@@ -57,18 +57,19 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    private func saveVideoFile(url: NSURL, inAlbum album: PHAssetCollection, completion: ((Bool, NSError) -> Void)? = nil) {
+    fileprivate func saveVideoFile(_ url: URL, inAlbum album: PHAssetCollection, completion: ((Bool, NSError) -> Void)? = nil) {
         PHPhotoLibrary
-            .sharedPhotoLibrary()
+            .shared()
             .performChanges({
-                guard let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(url),
+                guard let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url),
                     let assetPlaceholder = assetRequest.placeholderForCreatedAsset,
-                    let albumChangeRequest = PHAssetCollectionChangeRequest(forAssetCollection: album)
+                    let albumChangeRequest = PHAssetCollectionChangeRequest(for: album)
                     else {
                         return
                 }
                 
-                albumChangeRequest.addAssets([assetPlaceholder])
+                let assets: NSFastEnumeration = [assetPlaceholder] as NSFastEnumeration
+                albumChangeRequest.addAssets(assets)
             },
             completionHandler: { success, error in
                 print("Successfully saved video")
@@ -76,18 +77,18 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
         )
     }
     
-    private func findOrCreateAlbum(albumName: String, completion: (PHAssetCollection? -> Void)? = nil) {
+    fileprivate func findOrCreateAlbum(_ albumName: String, completion: ((PHAssetCollection?) -> Void)? = nil) {
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
-        let collection = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.Album, subtype: PHAssetCollectionSubtype.Any, options: fetchOptions)
+        let collection = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype: PHAssetCollectionSubtype.any, options: fetchOptions)
         
-        if let assetCollection = collection.firstObject as? PHAssetCollection {
+        if let assetCollection = collection.firstObject {
             completion?(assetCollection)
         } else {
             var assetCollectionPlaceholder: PHObjectPlaceholder? = nil
-            PHPhotoLibrary.sharedPhotoLibrary()
+            PHPhotoLibrary.shared()
                 .performChanges({
-                    let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollectionWithTitle(albumName)
+                    let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
                     assetCollectionPlaceholder = createAlbumRequest.placeholderForCreatedAssetCollection
                 },
                 completionHandler: { success, error in
@@ -97,8 +98,8 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
                             localIdentifiers.append(identifier)
                         }
                         
-                        let collectionFetchResult = PHAssetCollection.fetchAssetCollectionsWithLocalIdentifiers(localIdentifiers, options: nil)
-                        if let assetCollection = collectionFetchResult.firstObject as? PHAssetCollection {
+                        let collectionFetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: localIdentifiers, options: nil)
+                        if let assetCollection = collectionFetchResult.firstObject {
                             completion?(assetCollection)
                             return
                         }
@@ -116,6 +117,6 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
 private extension VideoCameraViewController {
     func setup() {
         movieFileOutput = AVCaptureMovieFileOutput()
-        cameraController.addOutput(movieFileOutput)
+//        cameraController.addOutput(movieFileOutput)
     }
 }
