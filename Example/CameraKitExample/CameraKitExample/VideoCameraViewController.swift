@@ -117,6 +117,6 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
 private extension VideoCameraViewController {
     func setup() {
         movieFileOutput = AVCaptureMovieFileOutput()
-//        cameraController.addOutput(movieFileOutput)
+        cameraController.addOutput(movieFileOutput)
     }
 }

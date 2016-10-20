@@ -1,5 +1,5 @@
 import UIKit
-import CameraKit
+import CameraKitUI
 
 
 class BaseCameraViewController: CameraViewController {

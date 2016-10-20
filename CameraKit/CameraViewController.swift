@@ -1,5 +1,6 @@
 import UIKit
 import AssetsLibrary
+import CameraKit
 
 open class CameraViewController: UIViewController, CameraControllerDelegate {
     open var captureModes: Set<CameraController.CaptureMode> { return [.video] }
@@ -52,10 +53,6 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     
     fileprivate var currentPinchGestureScale: CGFloat = 0.0
     fileprivate var currentZoomScale: CGFloat = 1.0
-
-    deinit {
-        print("CameraViewController did deinit")
-    }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -155,7 +152,7 @@ private extension CameraViewController {
             cameraController = try CameraController(view: cameraPreview, captureModes: captureModes)
             cameraController.delegate = self
         } catch {
-            fatalError("Could not setup camera controller")
+            fatalError("Could not setup camera controller: \(error)")
         }
     }
 }
