@@ -52,10 +52,6 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     
     fileprivate var currentPinchGestureScale: CGFloat = 0.0
     fileprivate var currentZoomScale: CGFloat = 1.0
-
-    deinit {
-        print("CameraViewController did deinit")
-    }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,12 +74,12 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    final func toggleCamera(_ sender: UIButton) {
+    public final func toggleCamera(_ sender: UIButton) {
         let _ = cameraController.toggleCameraPosition()
     }
     
     @IBAction
-    final func toggleLED(_ sender: UIButton) {
+    public final func toggleLED(_ sender: UIButton) {
         do {
             try cameraController.toggleLED()
         } catch {
@@ -92,7 +88,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    final func captureStillImage(_ sender: UIButton) {
+    public final func captureStillImage(_ sender: UIButton) {
         do {
             try cameraController.captureStillImage()
         }
@@ -102,7 +98,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    final func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
+    public final func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
         let newZoomScale: CGFloat = currentPinchGestureScale * sender.scale
@@ -118,7 +114,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    final func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
+    public final func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
         // Locate point of recognized tap gesture
         let focusPoint = sender.location(in: cameraPreview)
         
