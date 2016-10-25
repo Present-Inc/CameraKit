@@ -1,6 +1,7 @@
 import UIKit
 import AssetsLibrary
 
+
 open class CameraViewController: UIViewController, CameraControllerDelegate {
     open var captureModes: Set<CameraController.CaptureMode> { return [.video] }
     public fileprivate(set) var cameraController: CameraController!
@@ -88,7 +89,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public final func captureStillImage(_ sender: UIButton) {
+    public func captureStillImage(_ sender: UIButton) {
         do {
             try cameraController.captureStillImage()
         }
@@ -98,7 +99,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public final func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
+    public func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
         let newZoomScale: CGFloat = currentPinchGestureScale * sender.scale
@@ -114,7 +115,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public final func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
+    public func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
         // Locate point of recognized tap gesture
         let focusPoint = sender.location(in: cameraPreview)
         
@@ -136,7 +137,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
-    public final func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == zoomGestureRecognizer {
             currentPinchGestureScale = currentZoomScale
         }
