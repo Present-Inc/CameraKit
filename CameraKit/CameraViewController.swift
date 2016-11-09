@@ -75,12 +75,12 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public final func toggleCamera(_ sender: UIButton) {
+    open func toggleCamera(_ sender: UIButton) {
         let _ = cameraController.toggleCameraPosition()
     }
     
     @IBAction
-    public final func toggleLED(_ sender: UIButton) {
+    open func toggleLED(_ sender: UIButton) {
         do {
             try cameraController.toggleLED()
         } catch {
@@ -89,7 +89,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public func captureStillImage(_ sender: UIButton) {
+    open func captureStillImage(_ sender: UIButton) {
         do {
             try cameraController.captureStillImage()
         }
@@ -99,7 +99,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
+    open func zoomGestureRecognized(_ sender: UIPinchGestureRecognizer) {
         // New zoom scale is the current pinch gesture scale multiplied by the recognized pinch
         // gesture's scale.
         let newZoomScale: CGFloat = currentPinchGestureScale * sender.scale
@@ -115,7 +115,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
     }
     
     @IBAction
-    public func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
+    open func focusGestureRecognized(_ sender: UITapGestureRecognizer) {
         // Locate point of recognized tap gesture
         let focusPoint = sender.location(in: cameraPreview)
         
@@ -137,7 +137,7 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
 }
 
 extension CameraViewController: UIGestureRecognizerDelegate {
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == zoomGestureRecognizer {
             currentPinchGestureScale = currentZoomScale
         }
