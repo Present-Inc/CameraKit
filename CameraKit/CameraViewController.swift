@@ -148,12 +148,14 @@ extension CameraViewController: UIGestureRecognizerDelegate {
 
 private extension CameraViewController {
     func setup() {
-        do {
-            cameraController = try CameraController(view: cameraPreview, captureModes: captureModes)
-            cameraController.delegate = self
-        } catch {
-            fatalError("Could not setup camera controller")
-        }
+        #if !(TARGET_IPHONE_SIMULATOR)
+            do {
+                cameraController = try CameraController(view: cameraPreview, captureModes: captureModes)
+                cameraController.delegate = self
+            } catch {
+                fatalError("Could not setup camera controller")
+            }
+        #endif
     }
 }
 
