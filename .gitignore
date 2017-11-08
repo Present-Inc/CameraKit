@@ -31,3 +31,5 @@ DerivedData
 # to be in the repository.
 #
 Carthage/
+
+.DS_Store
