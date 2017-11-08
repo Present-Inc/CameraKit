@@ -10,7 +10,21 @@
 		7C43F6041CDE40BE003DE2CA /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */; };
 		7CB038EB1AD2059500536804 /* CameraKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CB038EA1AD2059500536804 /* CameraKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7CB039021AD205A600536804 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039011AD205A600536804 /* CameraController.swift */; };
+		D00CD3A21FB3A3FD0011C81B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039011AD205A600536804 /* CameraController.swift */; };
+		D00CD3A31FB3A3FD0011C81B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D00CD3971FB3A3E90011C81B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -18,10 +32,19 @@
 		7CB038E91AD2059500536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB038EA1AD2059500536804 /* CameraKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraKit.h; sourceTree = "<group>"; };
 		7CB039011AD205A600536804 /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		D00CD3991FB3A3E90011C81B /* libCameraKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCameraKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D00CD3A51FB3A4210011C81B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7CB038E11AD2059500536804 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00CD3961FB3A3E90011C81B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -36,6 +59,7 @@
 			children = (
 				7CB038E71AD2059500536804 /* CameraKit */,
 				7CB038E61AD2059500536804 /* Products */,
+				D00CD3A41FB3A4210011C81B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -43,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				7CB038E51AD2059500536804 /* CameraKit.framework */,
+				D00CD3991FB3A3E90011C81B /* libCameraKit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,6 +89,14 @@
 				7CB038E91AD2059500536804 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D00CD3A41FB3A4210011C81B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D00CD3A51FB3A4210011C81B /* AVFoundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -98,6 +131,23 @@
 			productReference = 7CB038E51AD2059500536804 /* CameraKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		D00CD3981FB3A3E90011C81B /* CameraKit Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D00CD3A11FB3A3EA0011C81B /* Build configuration list for PBXNativeTarget "CameraKit Static" */;
+			buildPhases = (
+				D00CD3951FB3A3E90011C81B /* Sources */,
+				D00CD3961FB3A3E90011C81B /* Frameworks */,
+				D00CD3971FB3A3E90011C81B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CameraKit Static";
+			productName = "CameraKit-Static";
+			productReference = D00CD3991FB3A3E90011C81B /* libCameraKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -105,12 +155,17 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Present, Inc";
 				TargetAttributes = {
 					7CB038E41AD2059500536804 = {
 						CreatedOnToolsVersion = 6.2;
 						LastSwiftMigration = 0800;
+					};
+					D00CD3981FB3A3E90011C81B = {
+						CreatedOnToolsVersion = 9.0.1;
+						DevelopmentTeam = 77DGUDV6W2;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -127,6 +182,7 @@
 			projectRoot = "";
 			targets = (
 				7CB038E41AD2059500536804 /* CameraKit */,
+				D00CD3981FB3A3E90011C81B /* CameraKit Static */,
 			);
 		};
 /* End PBXProject section */
@@ -151,6 +207,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D00CD3951FB3A3E90011C81B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D00CD3A21FB3A3FD0011C81B /* CameraController.swift in Sources */,
+				D00CD3A31FB3A3FD0011C81B /* CameraViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -162,14 +227,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -212,14 +283,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -288,6 +365,62 @@
 			};
 			name = Release;
 		};
+		D00CD39F1FB3A3EA0011C81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 77DGUDV6W2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = CameraKit;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D00CD3A01FB3A3EA0011C81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 77DGUDV6W2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = CameraKit;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -305,6 +438,15 @@
 			buildConfigurations = (
 				7CB038FC1AD2059500536804 /* Debug */,
 				7CB038FD1AD2059500536804 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D00CD3A11FB3A3EA0011C81B /* Build configuration list for PBXNativeTarget "CameraKit Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D00CD39F1FB3A3EA0011C81B /* Debug */,
+				D00CD3A01FB3A3EA0011C81B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

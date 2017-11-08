@@ -1,5 +1,6 @@
 import UIKit
 import AssetsLibrary
+import AVFoundation
 
 
 open class CameraViewController: UIViewController, CameraControllerDelegate {

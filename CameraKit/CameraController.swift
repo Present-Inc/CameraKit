@@ -1,5 +1,6 @@
 import UIKit
 import CoreGraphics
+import AVFoundation
 
 let CameraKitDomain = "tv.present.CameraKit"
 private let VideoOutputQueueIdentifier = CameraKitDomain + ".videoQueue"
@@ -186,11 +187,6 @@ open class CameraController: NSObject {
                 $0.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration
                 $0.activeVideoMaxFrameDuration = bestFrameRateRange.maxFrameDuration
             }
-            
-//            let formatDescription = bestFormat.formatDescription
-//            let dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription)
-//            
-//            print("Configured for \(dimensions.width)x\(dimensions.height) at \(bestFrameRateRange.maxFrameRate)")
         } else {
             throw Error.noSuitableFormatForSlowMotion
         }
