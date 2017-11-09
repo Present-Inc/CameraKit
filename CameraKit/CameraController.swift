@@ -197,7 +197,7 @@ open class CameraController: NSObject {
 }
 
 extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    public func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    public func captureOutput(_ captureOutput: AVCaptureOutput, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if configuringCaptureSession {
             return
         }
@@ -442,8 +442,13 @@ private extension CameraController {
             captureSession.removeInput(videoInput)
         }
         
+        guard let defaultVideoDevice = CameraController.defaultVideoDevice
+        else {
+            throw Error.noVideoDevice
+        }
+        
         do {
-            videoDeviceInput = try AVCaptureDeviceInput(device: CameraController.defaultVideoDevice)
+            videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice)
             addInput(videoDeviceInput)
         } catch let error as NSError {
             throw Error.avFoundationError(error)
@@ -455,8 +460,13 @@ private extension CameraController {
             captureSession.removeInput(audioInput)
         }
         
+        guard let defaultAudioDevice = CameraController.defaultAudioDevice
+        else {
+            throw Error.noAudioDevice
+        }
+        
         do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: CameraController.defaultAudioDevice)
+            audioDeviceInput = try AVCaptureDeviceInput(device: defaultAudioDevice)
             addInput(audioDeviceInput)
         } catch let error as NSError {
             throw Error.avFoundationError(error)
@@ -556,35 +566,27 @@ private extension CameraController {
 
 public extension CameraController {
     @objc public static var videoDevices: [AVCaptureDevice] {
-        return AVCaptureDevice.devices(for: AVMediaType.video) 
+        return AVCaptureDevice.devices(for: .video)
     }
     
     @objc public static var audioDevices: [AVCaptureDevice] {
-        return AVCaptureDevice.devices(for: AVMediaType.audio) 
+        return AVCaptureDevice.devices(for: .audio)
     }
     
-    @objc public static var defaultAudioDevice: AVCaptureDevice {
-        return AVCaptureDevice.default(for: AVMediaType.audio)!
+    @objc public static var defaultAudioDevice: AVCaptureDevice? {
+        return AVCaptureDevice.default(for: .audio)
     }
     
-    @objc public static var defaultVideoDevice: AVCaptureDevice {
-        return AVCaptureDevice.default(for: AVMediaType.video)!
+    @objc public static var defaultVideoDevice: AVCaptureDevice? {
+        return AVCaptureDevice.default(for: .video)
     }
     
-    @objc public var inputDevices: [AVCaptureDeviceInput] {
-        return captureSession.inputs as! [AVCaptureDeviceInput]
+    @objc public var inputDevices: [AVCaptureInput] {
+        return captureSession.inputs
     }
     
     @objc public var outputDevices: [AVCaptureOutput] {
-        return captureSession.outputs 
-    }
-    
-    @objc public var currentAudioDeviceInput: AVCaptureDeviceInput? {
-        return currentInputDeviceForMediaType(AVMediaType.audio.rawValue)
-    }
-    
-    @objc public var currentVideoDeviceInput: AVCaptureDeviceInput? {
-        return currentInputDeviceForMediaType(AVMediaType.video.rawValue)
+        return captureSession.outputs
     }
     
     @objc public var currentVideoDevice: AVCaptureDevice? {
@@ -593,12 +595,6 @@ public extension CameraController {
     
     @objc public var currentAudioDevice: AVCaptureDevice? {
         return audioDeviceInput?.device
-    }
-    
-    @objc func currentInputDeviceForMediaType(_ mediaType: String) -> AVCaptureDeviceInput? {
-        return inputDevices
-            .filter { $0.device.hasMediaType(AVMediaType(rawValue: mediaType)) }
-            .first
     }
     
     @objc func videoDeviceForPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
