@@ -26,6 +26,8 @@ open class CameraController: NSObject {
     }
     
     public enum Error: Swift.Error {
+        case simulator
+        
         case invalidStillImageOutputConnection
         
         case videoModeNotEnabled
@@ -45,8 +47,8 @@ open class CameraController: NSObject {
     
     open weak var delegate: CameraControllerDelegate?
     
-    open let captureSession: AVCaptureSession = AVCaptureSession()
-    open let previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
+    @objc open let captureSession: AVCaptureSession = AVCaptureSession()
+    @objc open let previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
     
     fileprivate let captureModes: Set<CaptureMode>
     
@@ -102,19 +104,19 @@ open class CameraController: NSObject {
         rootLayer.addSublayer(previewLayer)
     }
     
-    open func startCaptureSession() {
+    @objc open func startCaptureSession() {
         if !captureSession.isRunning {
             self.captureSession.startRunning()
         }
     }
     
-    open func stopCaptureSession() {
+    @objc open func stopCaptureSession() {
         if captureSession.isRunning {
             self.captureSession.stopRunning()
         }
     }
     
-    open func configureAudioSession(_ category: String, options: AVAudioSessionCategoryOptions) throws {
+    @objc open func configureAudioSession(_ category: String, options: AVAudioSessionCategoryOptions) throws {
         if !videoModeEnabled {
             throw Error.audioCaptureNotEnabled
         }
@@ -129,14 +131,14 @@ open class CameraController: NSObject {
         }
     }
     
-    open func captureStillImage() throws {
+    @objc open func captureStillImage() throws {
         if !photoModeEnabled {
             throw Error.photoModeNotEnabled
         }
         
-        if let videoConnection = stillImageOutput?.connection(withMediaType: AVMediaTypeVideo) , (videoConnection.isEnabled && videoConnection.isActive) {
+        if let videoConnection = stillImageOutput?.connection(with: AVMediaType.video) , (videoConnection.isEnabled && videoConnection.isActive) {
             stillImageOutput?.captureStillImageAsynchronously(from: videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
-                let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
+                let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer!)
                 guard let image = UIImage(data: imageData!)
                 else {
                     return
@@ -155,14 +157,14 @@ open class CameraController: NSObject {
             throw Error.noVideoDevice
         }
         
-        let deviceFormats = videoDevice.formats as? [AVCaptureDeviceFormat] ?? []
+        let deviceFormats = videoDevice.formats
         
-        var bestFormat: AVCaptureDeviceFormat?
-        var bestFrameRateRange: AVFrameRateRange!
+        var bestFormat: AVCaptureDevice.Format?
+        var bestFrameRateRange: AVFrameRateRange?
         
         for format in deviceFormats {
-            guard let frameRateRanges = format.videoSupportedFrameRateRanges as? [AVFrameRateRange]
-            else {
+            let frameRateRanges = format.videoSupportedFrameRateRanges
+            if frameRateRanges.isEmpty {
                 continue
             }
             
@@ -181,7 +183,8 @@ open class CameraController: NSObject {
             }
         }
         
-        if let bestFormat = bestFormat {
+        if let bestFormat = bestFormat,
+            let bestFrameRateRange = bestFrameRateRange {
             try lockVideoDevice(videoDevice) {
                 $0.activeFormat = bestFormat
                 $0.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration
@@ -194,7 +197,7 @@ open class CameraController: NSObject {
 }
 
 extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    public func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    public func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if configuringCaptureSession {
             return
         }
@@ -222,8 +225,8 @@ public extension CameraController {
     
     // MARK: Focus
     /// TODO: Support setting the focus mode with point defaulting to previewLayer.center
-    func setFocusMode(_ focusMode: AVCaptureFocusMode, atPoint point: CGPoint) throws {
-        let focusPoint = previewLayer.captureDevicePointOfInterest(for: point)
+    @objc func setFocusMode(_ focusMode: AVCaptureDevice.FocusMode, atPoint point: CGPoint) throws {
+        let focusPoint = previewLayer.captureDevicePointConverted(fromLayerPoint: point)
         guard let videoDevice = currentVideoDevice
         else {
             throw Error.noVideoDevice
@@ -239,8 +242,8 @@ public extension CameraController {
     
     // MARK: Exposure
     /// TODO: Support setting the exposure mode with point defaulting to previewLayer.center
-    func setExposureMode(_ exposureMode: AVCaptureExposureMode, atPoint point: CGPoint) throws {
-        let exposurePoint = previewLayer.captureDevicePointOfInterest(for: point)
+    @objc func setExposureMode(_ exposureMode: AVCaptureDevice.ExposureMode, atPoint point: CGPoint) throws {
+        let exposurePoint = previewLayer.captureDevicePointConverted(fromLayerPoint: point)
         
         if let videoDevice = currentVideoDevice {
             if videoDevice.isExposurePointOfInterestSupported && videoDevice.isExposureModeSupported(exposureMode) {
@@ -253,7 +256,7 @@ public extension CameraController {
     }
     
     // MARK: White Balance
-    func setWhiteBalanceMode(_ whiteBalanceMode: AVCaptureWhiteBalanceMode) throws {
+    @objc func setWhiteBalanceMode(_ whiteBalanceMode: AVCaptureDevice.WhiteBalanceMode) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.isWhiteBalanceModeSupported(whiteBalanceMode) {
                 try lockVideoDevice(videoDevice) {
@@ -264,7 +267,7 @@ public extension CameraController {
     }
     
     // MARK: Low Light Boost
-    func setLowLightBoost(_ automaticallyEnabled: Bool = true) throws {
+    @objc func setLowLightBoost(_ automaticallyEnabled: Bool = true) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.isLowLightBoostSupported {
                 try lockVideoDevice(videoDevice) {
@@ -275,7 +278,7 @@ public extension CameraController {
     }
     
     // MARK: Torch
-    func setTorchMode(_ mode: AVCaptureTorchMode) throws {
+    @objc func setTorchMode(_ mode: AVCaptureDevice.TorchMode) throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.hasTorch && videoDevice.isTorchAvailable {
                 try lockVideoDevice(videoDevice) {
@@ -285,7 +288,7 @@ public extension CameraController {
         }
     }
     
-    func toggleLED() throws {
+    @objc func toggleLED() throws {
         if let videoDevice = currentVideoDevice {
             if videoDevice.hasTorch && videoDevice.isTorchAvailable {
                 try lockVideoDevice(videoDevice) { videoDevice in
@@ -320,7 +323,7 @@ public extension CameraController {
     // MARK: Camera Position
     
     /// Convenience method for toggling the camera position.
-    func toggleCameraPosition() -> Bool {
+    @objc func toggleCameraPosition() -> Bool {
         guard let cameraPosition = currentVideoDevice?.position
         else {
             return false
@@ -329,7 +332,7 @@ public extension CameraController {
         return cameraPosition == .back ? setCamera(.front) : setCamera(.back)
     }
     
-    fileprivate func setCamera(_ position: AVCaptureDevicePosition) -> Bool {
+    fileprivate func setCamera(_ position: AVCaptureDevice.Position) -> Bool {
         if slowMotionEnabled && position != .back {
             return false
         }
@@ -347,19 +350,19 @@ public extension CameraController {
         return false
     }
     
-    func addInput(_ input: AVCaptureInput?) {
-        if captureSession.canAddInput(input) {
-            captureSession.addInput(input)
+    @objc func addInput(_ input: AVCaptureInput?) {
+        if captureSession.canAddInput(input!) {
+            captureSession.addInput(input!)
         }
     }
     
-    func addOutput(_ output: AVCaptureOutput?) {
-        if captureSession.canAddOutput(output) {
-            captureSession.addOutput(output)
+    @objc func addOutput(_ output: AVCaptureOutput?) {
+        if captureSession.canAddOutput(output!) {
+            captureSession.addOutput(output!)
         }
     }
     
-    func configureCaptureSession(_ closure: (AVCaptureSession) -> ()) {
+    @objc func configureCaptureSession(_ closure: (AVCaptureSession) -> ()) {
         configuringCaptureSession = true
     
         stopCaptureSession()
@@ -384,16 +387,20 @@ private extension CameraController {
     
     func setupPreviewLayer() {
         previewLayer.session = captureSession
-        previewLayer.videoGravity = AVVideoScalingModeFit
-        previewLayer.connection.videoOrientation = .portrait
+        previewLayer.videoGravity = AVLayerVideoGravity(rawValue: AVVideoScalingModeFit)
+        previewLayer.connection?.videoOrientation = .portrait
     }
     
     func setupCaptureSession() throws {
+        #if TARGET_IPHONE_SIMULATOR
+            throw Error.simulator
+        #endif
+        
         /// TODO: Allow this to be input by the user
         if captureModes.count == 1 && photoModeEnabled {
-            captureSession.sessionPreset = AVCaptureSessionPresetPhoto
+            captureSession.sessionPreset = AVCaptureSession.Preset.photo
         } else {
-            captureSession.sessionPreset = AVCaptureSessionPresetHigh
+            captureSession.sessionPreset = AVCaptureSession.Preset.high
         }
         
         try self.setupVideoDevices()
@@ -423,8 +430,8 @@ private extension CameraController {
         backCameraDevice = videoDeviceForPosition(.back)
         
         do {
-            frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice)
-            backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice)
+            frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice!)
+            backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice!)
         } catch let error as NSError {
             throw Error.avFoundationError(error)
         }
@@ -466,7 +473,7 @@ private extension CameraController {
         videoDeviceOutput = AVCaptureVideoDataOutput()
         videoDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
         videoDeviceOutput?.videoSettings = [
-            kCVPixelBufferPixelFormatTypeKey as AnyHashable: NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange as UInt32)
+            kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange as UInt32)
         ]
         
         // Add the video device output
@@ -503,7 +510,7 @@ private extension CameraController {
     
     func setupVideoConnection() {
         // Setup the video connction
-        videoConnection = videoDeviceOutput?.connection(withMediaType: AVMediaTypeVideo)
+        videoConnection = videoDeviceOutput?.connection(with: AVMediaType.video)
         
         // TODO: Support different video orientations
         videoConnection?.videoOrientation = .portrait
@@ -512,7 +519,7 @@ private extension CameraController {
     
     func setupAudioConnection() {
         // Setup the audio connection
-        audioConnection = audioDeviceOutput?.connection(withMediaType: AVMediaTypeAudio)
+        audioConnection = audioDeviceOutput?.connection(with: AVMediaType.audio)
     }
     
     func teardownCaptureSession() {
@@ -548,53 +555,53 @@ private extension CameraController {
 // MARK: AVFoundation Utilities
 
 public extension CameraController {
-    public static var videoDevices: [AVCaptureDevice] {
-        return AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo) as! [AVCaptureDevice]
+    @objc public static var videoDevices: [AVCaptureDevice] {
+        return AVCaptureDevice.devices(for: AVMediaType.video) 
     }
     
-    public static var audioDevices: [AVCaptureDevice] {
-        return AVCaptureDevice.devices(withMediaType: AVMediaTypeAudio) as! [AVCaptureDevice]
+    @objc public static var audioDevices: [AVCaptureDevice] {
+        return AVCaptureDevice.devices(for: AVMediaType.audio) 
     }
     
-    public static var defaultAudioDevice: AVCaptureDevice {
-        return AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
+    @objc public static var defaultAudioDevice: AVCaptureDevice {
+        return AVCaptureDevice.default(for: AVMediaType.audio)!
     }
     
-    public static var defaultVideoDevice: AVCaptureDevice {
-        return AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+    @objc public static var defaultVideoDevice: AVCaptureDevice {
+        return AVCaptureDevice.default(for: AVMediaType.video)!
     }
     
-    public var inputDevices: [AVCaptureDeviceInput] {
+    @objc public var inputDevices: [AVCaptureDeviceInput] {
         return captureSession.inputs as! [AVCaptureDeviceInput]
     }
     
-    public var outputDevices: [AVCaptureOutput] {
-        return captureSession.outputs as! [AVCaptureOutput]
+    @objc public var outputDevices: [AVCaptureOutput] {
+        return captureSession.outputs 
     }
     
-    public var currentAudioDeviceInput: AVCaptureDeviceInput? {
-        return currentInputDeviceForMediaType(AVMediaTypeAudio)
+    @objc public var currentAudioDeviceInput: AVCaptureDeviceInput? {
+        return currentInputDeviceForMediaType(AVMediaType.audio.rawValue)
     }
     
-    public var currentVideoDeviceInput: AVCaptureDeviceInput? {
-        return currentInputDeviceForMediaType(AVMediaTypeVideo)
+    @objc public var currentVideoDeviceInput: AVCaptureDeviceInput? {
+        return currentInputDeviceForMediaType(AVMediaType.video.rawValue)
     }
     
-    public var currentVideoDevice: AVCaptureDevice? {
+    @objc public var currentVideoDevice: AVCaptureDevice? {
         return videoDeviceInput?.device
     }
     
-    public var currentAudioDevice: AVCaptureDevice? {
+    @objc public var currentAudioDevice: AVCaptureDevice? {
         return audioDeviceInput?.device
     }
     
-    func currentInputDeviceForMediaType(_ mediaType: String) -> AVCaptureDeviceInput? {
+    @objc func currentInputDeviceForMediaType(_ mediaType: String) -> AVCaptureDeviceInput? {
         return inputDevices
-            .filter { $0.device.hasMediaType(mediaType) }
+            .filter { $0.device.hasMediaType(AVMediaType(rawValue: mediaType)) }
             .first
     }
     
-    func videoDeviceForPosition(_ position: AVCaptureDevicePosition) -> AVCaptureDevice? {
+    @objc func videoDeviceForPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         return CameraController.videoDevices.filter { $0.position == position }.first
     }
     

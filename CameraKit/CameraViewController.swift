@@ -5,7 +5,7 @@ import AVFoundation
 
 open class CameraViewController: UIViewController, CameraControllerDelegate {
     open var captureModes: Set<CameraController.CaptureMode> { return [.video] }
-    public fileprivate(set) var cameraController: CameraController!
+    @objc public fileprivate(set) var cameraController: CameraController!
     
     @IBOutlet
     open var cameraPreview: UIView!
@@ -123,15 +123,15 @@ open class CameraViewController: UIViewController, CameraControllerDelegate {
         // Update camera controller's focus & exposure modes to continuously auto-focus on the
         // point of the tap gesture.
         do {
-            try cameraController.setFocusMode(AVCaptureFocusMode.continuousAutoFocus, atPoint: focusPoint)
-            try cameraController.setExposureMode(AVCaptureExposureMode.continuousAutoExposure, atPoint: focusPoint)
+            try cameraController.setFocusMode(AVCaptureDevice.FocusMode.continuousAutoFocus, atPoint: focusPoint)
+            try cameraController.setExposureMode(AVCaptureDevice.ExposureMode.continuousAutoExposure, atPoint: focusPoint)
         } catch {
             print("Could not set focus or exposure mode")
         }
     }
     
     /// Override this method to handle a captured image.
-    open func cameraController(_ controller: CameraController, didOutputImage image: UIImage) { }
+    @objc open func cameraController(_ controller: CameraController, didOutputImage image: UIImage) { }
     
     /// Override this method to handle sample buffers as they're captured.
     open func cameraController(_ controller: CameraController, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, type: CameraController.FrameType) { }
@@ -149,14 +149,19 @@ extension CameraViewController: UIGestureRecognizerDelegate {
 
 private extension CameraViewController {
     func setup() {
-        #if !(TARGET_IPHONE_SIMULATOR)
-            do {
-                cameraController = try CameraController(view: cameraPreview, captureModes: captureModes)
-                cameraController.delegate = self
-            } catch {
+        do {
+            cameraController = try CameraController(view: cameraPreview, captureModes: captureModes)
+            cameraController.delegate = self
+        } catch let error as CameraController.Error {
+            switch error {
+            case .simulator:
+                print("Simulator target detected. This is a graceful failure.")
+            default:
                 fatalError("Could not setup camera controller")
             }
-        #endif
+        } catch {
+            fatalError("Unexpected error.")
+        }
     }
 }
 
