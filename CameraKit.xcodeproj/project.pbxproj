@@ -10,6 +10,8 @@
 		7C43F6041CDE40BE003DE2CA /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */; };
 		7CB038EB1AD2059500536804 /* CameraKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CB038EA1AD2059500536804 /* CameraKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7CB039021AD205A600536804 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039011AD205A600536804 /* CameraController.swift */; };
+		D00919BE1FB635F200BF8DFB /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00919BC1FB635C100BF8DFB /* UIViewExtensions.swift */; };
+		D00919BF1FB635FE00BF8DFB /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00919BC1FB635C100BF8DFB /* UIViewExtensions.swift */; };
 		D00CD3A21FB3A3FD0011C81B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB039011AD205A600536804 /* CameraController.swift */; };
 		D00CD3A31FB3A3FD0011C81B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */; };
 /* End PBXBuildFile section */
@@ -32,6 +34,7 @@
 		7CB038E91AD2059500536804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CB038EA1AD2059500536804 /* CameraKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraKit.h; sourceTree = "<group>"; };
 		7CB039011AD205A600536804 /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		D00919BC1FB635C100BF8DFB /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		D00CD3991FB3A3E90011C81B /* libCameraKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCameraKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D00CD3A51FB3A4210011C81B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -79,6 +82,7 @@
 				7CB039011AD205A600536804 /* CameraController.swift */,
 				7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */,
 				7CB038E81AD2059500536804 /* Supporting Files */,
+				D00919BC1FB635C100BF8DFB /* UIViewExtensions.swift */,
 			);
 			path = CameraKit;
 			sourceTree = "<group>";
@@ -204,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CB039021AD205A600536804 /* CameraController.swift in Sources */,
+				D00919BF1FB635FE00BF8DFB /* UIViewExtensions.swift in Sources */,
 				7C43F6041CDE40BE003DE2CA /* CameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -213,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D00CD3A21FB3A3FD0011C81B /* CameraController.swift in Sources */,
+				D00919BE1FB635F200BF8DFB /* UIViewExtensions.swift in Sources */,
 				D00CD3A31FB3A3FD0011C81B /* CameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

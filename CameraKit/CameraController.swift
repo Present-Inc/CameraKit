@@ -95,15 +95,6 @@ open class CameraController: NSObject {
         try self.init(captureModes: [captureMode])
     }
     
-    public convenience init(view: UIView, captureModes: Set<CaptureMode>) throws {
-        try self.init(captureModes: captureModes)
-        
-        let rootLayer = view.layer
-        rootLayer.masksToBounds = true
-        previewLayer.frame = rootLayer.bounds
-        rootLayer.addSublayer(previewLayer)
-    }
-    
     @objc open func startCaptureSession() {
         if !captureSession.isRunning {
             self.captureSession.startRunning()
