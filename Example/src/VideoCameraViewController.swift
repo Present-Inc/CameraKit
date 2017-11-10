@@ -22,9 +22,10 @@ class VideoCameraViewController: BaseCameraViewController {
         setup()
     }
     
+    @objc
     func toggleRecording(_ sender: UIButton) {
         recording = !recording
-        recording ? movieFileOutput.startRecording(toOutputFileURL: newOutputFileURL(), recordingDelegate: self) : movieFileOutput.stopRecording()
+        recording ? movieFileOutput.startRecording(to: newOutputFileURL(), recordingDelegate: self) : movieFileOutput.stopRecording()
     }
 }
 
@@ -34,8 +35,7 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
         return URL(fileURLWithPath: outputPath)
     }
     
-    func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) { }
-    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         let alertController = UIAlertController(title: "Save", message: "Would you like to save this video?", preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))

@@ -13,6 +13,7 @@ class StillImageCameraViewController: BaseCameraViewController {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(StillImageCameraViewController.successfullySavedImage(_:error:context:)), nil)
     }
     
+    @objc
     func successfullySavedImage(_ image: UIImage, error: NSError, context: UnsafeMutableRawPointer) {
         print("Successfully saved image!")
     }
