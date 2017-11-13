@@ -52,14 +52,7 @@ open class CameraController: NSObject {
     
     fileprivate let captureModes: Set<CaptureMode>
     
-    fileprivate var paused: Bool = false
     fileprivate var configuringCaptureSession: Bool = false
-    
-    fileprivate var frontCameraDevice: AVCaptureDevice?
-    fileprivate var backCameraDevice: AVCaptureDevice?
-    
-    fileprivate var frontCameraDeviceInput: AVCaptureDeviceInput?
-    fileprivate var backCameraDeviceInput: AVCaptureDeviceInput?
     
     // Capture session inputs
     fileprivate var videoDeviceInput: AVCaptureDeviceInput?
@@ -143,7 +136,7 @@ open class CameraController: NSObject {
     }
     
     fileprivate func setSlowMotion() throws {
-        guard let videoDevice = backCameraDevice
+        guard let videoDevice = videoDeviceForPosition(.back)
         else {
             throw Error.noVideoDevice
         }
@@ -320,7 +313,9 @@ public extension CameraController {
             return false
         }
         
-        return cameraPosition == .back ? setCamera(.front) : setCamera(.back)
+        return cameraPosition == .back
+            ? setCamera(.front)
+            : setCamera(.back)
     }
     
     fileprivate func setCamera(_ position: AVCaptureDevice.Position) -> Bool {
@@ -328,17 +323,21 @@ public extension CameraController {
             return false
         }
         
-        let deviceInput = position == .front ? frontCameraDeviceInput : backCameraDeviceInput
-        
-        if let deviceInput = deviceInput {
-            configureCaptureSession { captureSession in
-                self.replaceCurrentVideoDeviceInputWithDeviceInput(deviceInput)
+        do {
+            if let input = try deviceInput(forPosition: position) {
+                setActiveDeviceInput(input)
             }
             
             return true
+        } catch {
+            return false
         }
-        
-        return false
+    }
+    
+    fileprivate func setActiveDeviceInput(_ input: AVCaptureDeviceInput) {
+        configureCaptureSession { captureSession in
+            self.replaceCurrentVideoDeviceInputWithDeviceInput(input)
+        }
     }
     
     @objc func addInput(_ input: AVCaptureInput?) {
@@ -394,7 +393,6 @@ private extension CameraController {
             captureSession.sessionPreset = AVCaptureSession.Preset.high
         }
         
-        try self.setupVideoDevices()
         try setupVideoDeviceInput()
         setupVideoDeviceOutput()
         setupVideoConnection()
@@ -416,18 +414,6 @@ private extension CameraController {
 // MARK: - Capture Session Utilities
 
 private extension CameraController {
-    func setupVideoDevices() throws {
-        frontCameraDevice = videoDeviceForPosition(.front)
-        backCameraDevice = videoDeviceForPosition(.back)
-        
-        do {
-            frontCameraDeviceInput = try AVCaptureDeviceInput(device: frontCameraDevice!)
-            backCameraDeviceInput = try AVCaptureDeviceInput(device: backCameraDevice!)
-        } catch let error as NSError {
-            throw Error.avFoundationError(error)
-        }
-    }
-    
     func setupVideoDeviceInput() throws {
         if let videoInput = videoDeviceInput {
             captureSession.removeInput(videoInput)
@@ -590,6 +576,18 @@ public extension CameraController {
     
     @objc func videoDeviceForPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         return CameraController.videoDevices.filter { $0.position == position }.first
+    }
+    
+    func deviceInput(forPosition position: AVCaptureDevice.Position) throws -> AVCaptureDeviceInput? {
+        do {
+            if let device = videoDeviceForPosition(position) {
+                return try AVCaptureDeviceInput(device: device)
+            }
+        } catch let error as NSError {
+            throw Error.avFoundationError(error)
+        }
+        
+        return nil
     }
     
     fileprivate func replaceCurrentVideoDeviceWithDevice(_ device: AVCaptureDevice) throws {
