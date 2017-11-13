@@ -81,8 +81,8 @@
 				7CB038EA1AD2059500536804 /* CameraKit.h */,
 				7CB039011AD205A600536804 /* CameraController.swift */,
 				7C43F6031CDE40BE003DE2CA /* CameraViewController.swift */,
-				7CB038E81AD2059500536804 /* Supporting Files */,
 				D00919BC1FB635C100BF8DFB /* UIViewExtensions.swift */,
+				7CB038E81AD2059500536804 /* Supporting Files */,
 			);
 			path = CameraKit;
 			sourceTree = "<group>";

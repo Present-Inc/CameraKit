@@ -383,7 +383,7 @@ private extension CameraController {
     }
     
     func setupCaptureSession() throws {
-        #if TARGET_IPHONE_SIMULATOR
+        #if arch(x86_64) || arch(i386)
             throw Error.simulator
         #endif
         
