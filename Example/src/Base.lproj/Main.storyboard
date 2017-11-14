@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="exx-cn-42l">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="exx-cn-42l">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,36 +18,41 @@
                         <viewControllerLayoutGuide type="bottom" id="icw-t1-8SZ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="jHX-lh-nJP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="0wy-sR-Mbk">
-                                <frame key="frameInset" minX="20" minY="190" width="335" height="221"/>
+                                <rect key="frame" x="20" y="190" width="335" height="220.33333333333337"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CameraKit Example" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s3g-u7-6zv">
+                                        <rect key="frame" x="0.0" y="0.0" width="335" height="20.333333333333332"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hFU-HD-vLE">
+                                        <rect key="frame" x="0.0" y="40.333333333333314" width="335" height="30"/>
                                         <state key="normal" title="Video Camera"/>
                                         <connections>
                                             <segue destination="zZO-Eb-Ept" kind="show" id="c0W-dj-bb6"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eWB-vv-HmV">
+                                        <rect key="frame" x="0.0" y="90.333333333333314" width="335" height="30"/>
                                         <state key="normal" title="Square Camera"/>
                                         <connections>
                                             <segue destination="C78-ch-LFX" kind="show" id="cd1-eF-6wU"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfX-fT-pRS">
+                                        <rect key="frame" x="0.0" y="140.33333333333331" width="335" height="30"/>
                                         <state key="normal" title="Slow Mo Camera"/>
                                         <connections>
                                             <segue destination="EbW-7l-AKV" kind="show" id="J5I-on-DfL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZHW-jR-b1v">
+                                        <rect key="frame" x="0.0" y="190.33333333333331" width="335" height="30"/>
                                         <state key="normal" title="Still Image Camera"/>
                                         <connections>
                                             <segue destination="zrx-0I-p1H" kind="show" id="Xf0-g9-lMh"/>
@@ -79,17 +88,17 @@
         <!--Square Camera View Controller-->
         <scene sceneID="AD6-7R-RNo">
             <objects>
-                <viewController id="C78-ch-LFX" customClass="SquareCameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="C78-ch-LFX" customClass="SquareCameraViewController" customModule="CameraExampleStatic" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hH5-lP-f3m"/>
                         <viewControllerLayoutGuide type="bottom" id="zpn-qK-yyQ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="NFZ-kG-F3S">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tm6-hr-8iC">
-                                <frame key="frameInset" width="600" height="600"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tm6-hr-8iC">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -97,8 +106,8 @@
                                     <outletCollection property="gestureRecognizers" destination="vnV-Hn-Luk" appends="YES" id="aNa-VT-Wu4"/>
                                 </connections>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vas-sk-kV7">
-                                <frame key="frameInset" minX="272" minY="520" width="55" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vas-sk-kV7">
+                                <rect key="frame" x="160" y="698" width="55" height="30"/>
                                 <state key="normal" title="Capture">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -107,13 +116,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-00-RFM">
+                                <rect key="frame" x="20" y="64" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
                                 <connections>
                                     <action selector="closeButtonPressed:" destination="C78-ch-LFX" eventType="touchUpInside" id="mv9-ph-vzR"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eWp-jD-Dss">
-                                <frame key="frameInset" minX="476" minY="40" width="30" height="30"/>
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
                                 <state key="normal" title="LED">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -122,7 +132,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EnT-SM-5Ct">
-                                <frame key="frameInset" minX="526" minY="40" width="54" height="30"/>
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
                                 <state key="normal" title="Camera">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -134,10 +144,10 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="2Db-00-RFM" firstAttribute="leading" secondItem="Tm6-hr-8iC" secondAttribute="leading" constant="20" id="1Kc-fs-kgy"/>
+                            <constraint firstAttribute="bottom" secondItem="Tm6-hr-8iC" secondAttribute="bottom" id="5e7-7A-Kd7"/>
                             <constraint firstItem="eWp-jD-Dss" firstAttribute="top" secondItem="EnT-SM-5Ct" secondAttribute="top" id="AcE-4X-k8I"/>
                             <constraint firstItem="Tm6-hr-8iC" firstAttribute="leading" secondItem="NFZ-kG-F3S" secondAttribute="leading" id="CWv-fG-9k7"/>
                             <constraint firstItem="Tm6-hr-8iC" firstAttribute="top" secondItem="NFZ-kG-F3S" secondAttribute="top" id="CaC-Pi-cLi"/>
-                            <constraint firstItem="zpn-qK-yyQ" firstAttribute="top" secondItem="Tm6-hr-8iC" secondAttribute="bottom" id="JtM-qX-npv"/>
                             <constraint firstItem="2Db-00-RFM" firstAttribute="top" secondItem="EnT-SM-5Ct" secondAttribute="top" id="LkA-rp-kdH"/>
                             <constraint firstItem="EnT-SM-5Ct" firstAttribute="leading" secondItem="eWp-jD-Dss" secondAttribute="trailing" constant="20" id="Sih-qc-UX5"/>
                             <constraint firstItem="EnT-SM-5Ct" firstAttribute="top" secondItem="hH5-lP-f3m" secondAttribute="bottom" constant="20" id="T0E-Qo-5XH"/>
@@ -175,17 +185,17 @@
         <!--Video Camera View Controller-->
         <scene sceneID="b1N-iB-Poa">
             <objects>
-                <viewController id="zZO-Eb-Ept" customClass="VideoCameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="zZO-Eb-Ept" customClass="VideoCameraViewController" customModule="CameraExampleStatic" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="h7Q-gB-q5n"/>
                         <viewControllerLayoutGuide type="bottom" id="c9R-aJ-e0j"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GPX-Qr-YZd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NCt-fy-JYm">
-                                <frame key="frameInset" width="600" height="600"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NCt-fy-JYm">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -193,20 +203,21 @@
                                     <outletCollection property="gestureRecognizers" destination="1FR-0t-H19" appends="YES" id="mbR-Xl-wjO"/>
                                 </connections>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBh-6k-IBL">
-                                <frame key="frameInset" minX="273" minY="520" width="55" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBh-6k-IBL">
+                                <rect key="frame" x="160" y="698" width="55" height="30"/>
                                 <state key="normal" title="Capture">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LzP-mM-9dL">
+                                <rect key="frame" x="20" y="64" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
                                 <connections>
                                     <action selector="closeButtonPressed:" destination="zZO-Eb-Ept" eventType="touchUpInside" id="rzM-rz-7eU"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPd-RZ-MTB">
-                                <frame key="frameInset" minX="476" minY="40" width="30" height="30"/>
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
                                 <state key="normal" title="LED">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -215,7 +226,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Fl-YN-eYX">
-                                <frame key="frameInset" minX="526" minY="40" width="54" height="30"/>
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
                                 <state key="normal" title="Camera">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -236,8 +247,8 @@
                             <constraint firstItem="NCt-fy-JYm" firstAttribute="top" secondItem="GPX-Qr-YZd" secondAttribute="top" id="S5B-hc-JZv"/>
                             <constraint firstItem="6Fl-YN-eYX" firstAttribute="leading" secondItem="CPd-RZ-MTB" secondAttribute="trailing" constant="20" id="Xh7-5e-8jg"/>
                             <constraint firstItem="LzP-mM-9dL" firstAttribute="top" secondItem="6Fl-YN-eYX" secondAttribute="top" id="bob-5k-law"/>
+                            <constraint firstAttribute="bottom" secondItem="NCt-fy-JYm" secondAttribute="bottom" id="coc-Bp-AOj"/>
                             <constraint firstAttribute="trailing" secondItem="NCt-fy-JYm" secondAttribute="trailing" id="icR-Rd-fvu"/>
-                            <constraint firstItem="c9R-aJ-e0j" firstAttribute="top" secondItem="NCt-fy-JYm" secondAttribute="bottom" id="pqI-U6-B67"/>
                         </constraints>
                     </view>
                     <connections>
@@ -268,17 +279,17 @@
         <!--Still Image Camera View Controller-->
         <scene sceneID="9fv-69-KXC">
             <objects>
-                <viewController storyboardIdentifier="StillImageCameraViewController" id="zrx-0I-p1H" customClass="StillImageCameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StillImageCameraViewController" id="zrx-0I-p1H" customClass="StillImageCameraViewController" customModule="CameraExampleStatic" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2iH-T7-LOP"/>
                         <viewControllerLayoutGuide type="bottom" id="GYN-3b-ebp"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="gmo-bc-tsy">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A87-ip-WvD">
-                                <frame key="frameInset" width="600" height="600"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A87-ip-WvD">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -286,8 +297,8 @@
                                     <outletCollection property="gestureRecognizers" destination="PWL-WG-POK" appends="YES" id="A1u-ji-y8S"/>
                                 </connections>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUL-Wk-bIt">
-                                <frame key="frameInset" minX="273" minY="520" width="55" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUL-Wk-bIt">
+                                <rect key="frame" x="160" y="698" width="55" height="30"/>
                                 <state key="normal" title="Capture">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -296,13 +307,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fv7-QD-52O">
+                                <rect key="frame" x="20" y="64" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
                                 <connections>
                                     <action selector="closeButtonPressed:" destination="zrx-0I-p1H" eventType="touchUpInside" id="TAl-g6-hNB"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HVg-k1-ems">
-                                <frame key="frameInset" minX="476" minY="40" width="30" height="30"/>
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
                                 <state key="normal" title="LED">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -311,7 +323,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6SE-Yr-H1k">
-                                <frame key="frameInset" minX="526" minY="40" width="54" height="30"/>
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
                                 <state key="normal" title="Camera">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -324,6 +336,7 @@
                         <constraints>
                             <constraint firstItem="A87-ip-WvD" firstAttribute="leading" secondItem="gmo-bc-tsy" secondAttribute="leading" id="7av-n5-WhI"/>
                             <constraint firstItem="6SE-Yr-H1k" firstAttribute="leading" secondItem="HVg-k1-ems" secondAttribute="trailing" constant="20" id="8Ht-vL-QCu"/>
+                            <constraint firstAttribute="bottom" secondItem="A87-ip-WvD" secondAttribute="bottom" id="Jr1-V2-zY9"/>
                             <constraint firstItem="Fv7-QD-52O" firstAttribute="leading" secondItem="A87-ip-WvD" secondAttribute="leading" constant="20" id="Lwv-7u-5OV"/>
                             <constraint firstItem="HVg-k1-ems" firstAttribute="top" secondItem="6SE-Yr-H1k" secondAttribute="top" id="NVo-Gb-jSK"/>
                             <constraint firstItem="Fv7-QD-52O" firstAttribute="top" secondItem="6SE-Yr-H1k" secondAttribute="top" id="SUD-PH-UkL"/>
@@ -333,7 +346,6 @@
                             <constraint firstItem="6SE-Yr-H1k" firstAttribute="top" secondItem="2iH-T7-LOP" secondAttribute="bottom" constant="20" id="bcr-Ph-kbv"/>
                             <constraint firstItem="A87-ip-WvD" firstAttribute="top" secondItem="gmo-bc-tsy" secondAttribute="top" id="ono-OS-OMd"/>
                             <constraint firstAttribute="centerX" secondItem="DUL-Wk-bIt" secondAttribute="centerX" id="wzq-98-W9Q"/>
-                            <constraint firstItem="GYN-3b-ebp" firstAttribute="top" secondItem="A87-ip-WvD" secondAttribute="bottom" id="yA0-dX-bHr"/>
                         </constraints>
                     </view>
                     <connections>
@@ -364,17 +376,17 @@
         <!--Slow Motion Camera View Controller-->
         <scene sceneID="JwM-Qq-QTU">
             <objects>
-                <viewController storyboardIdentifier="SlowMotionCameraViewController" id="EbW-7l-AKV" customClass="SlowMotionCameraViewController" customModule="CameraKitExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SlowMotionCameraViewController" id="EbW-7l-AKV" customClass="SlowMotionCameraViewController" customModule="CameraExampleStatic" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yL6-hX-Sh0"/>
                         <viewControllerLayoutGuide type="bottom" id="KxP-ub-JSa"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6UM-Ko-vpn">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qxa-Um-FdL">
-                                <frame key="frameInset" width="600" height="600"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qxa-Um-FdL">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -382,20 +394,21 @@
                                     <outletCollection property="gestureRecognizers" destination="dDK-Od-8qn" appends="YES" id="lQY-vF-DYz"/>
                                 </connections>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhB-V5-abW">
-                                <frame key="frameInset" minX="273" minY="520" width="55" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhB-V5-abW">
+                                <rect key="frame" x="160" y="698" width="55" height="30"/>
                                 <state key="normal" title="Capture">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="By4-gf-O2G">
+                                <rect key="frame" x="20" y="64" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
                                 <connections>
                                     <action selector="closeButtonPressed:" destination="EbW-7l-AKV" eventType="touchUpInside" id="gJC-6v-xYJ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ukH-1e-8Yf">
-                                <frame key="frameInset" minX="476" minY="40" width="30" height="30"/>
+                                <rect key="frame" x="476" y="40" width="30" height="30"/>
                                 <state key="normal" title="LED">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -404,7 +417,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yB3-eG-z8x">
-                                <frame key="frameInset" minX="526" minY="40" width="54" height="30"/>
+                                <rect key="frame" x="526" y="40" width="54" height="30"/>
                                 <state key="normal" title="Camera">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -415,6 +428,7 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Qxa-Um-FdL" secondAttribute="bottom" id="1Qn-2d-uBY"/>
                             <constraint firstItem="yB3-eG-z8x" firstAttribute="top" secondItem="yL6-hX-Sh0" secondAttribute="bottom" constant="20" id="2bL-sj-2uf"/>
                             <constraint firstItem="yB3-eG-z8x" firstAttribute="leading" secondItem="ukH-1e-8Yf" secondAttribute="trailing" constant="20" id="959-h5-XbD"/>
                             <constraint firstAttribute="centerX" secondItem="LhB-V5-abW" secondAttribute="centerX" id="A0d-RT-xkZ"/>
@@ -424,7 +438,6 @@
                             <constraint firstItem="KxP-ub-JSa" firstAttribute="top" secondItem="LhB-V5-abW" secondAttribute="bottom" constant="50" id="Tfm-aG-F1H"/>
                             <constraint firstItem="Qxa-Um-FdL" firstAttribute="top" secondItem="6UM-Ko-vpn" secondAttribute="top" id="Yy7-6Y-aCY"/>
                             <constraint firstAttribute="trailing" secondItem="yB3-eG-z8x" secondAttribute="trailing" constant="20" id="fIC-Eb-99h"/>
-                            <constraint firstItem="KxP-ub-JSa" firstAttribute="top" secondItem="Qxa-Um-FdL" secondAttribute="bottom" id="xlD-wT-PGy"/>
                             <constraint firstItem="ukH-1e-8Yf" firstAttribute="top" secondItem="yB3-eG-z8x" secondAttribute="top" id="z8F-HL-SBz"/>
                             <constraint firstAttribute="trailing" secondItem="Qxa-Um-FdL" secondAttribute="trailing" id="ztJ-Le-dm7"/>
                         </constraints>

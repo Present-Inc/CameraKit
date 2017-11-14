@@ -377,7 +377,7 @@ private extension CameraController {
     
     func setupPreviewLayer() {
         previewLayer.session = captureSession
-        previewLayer.videoGravity = AVLayerVideoGravity(rawValue: AVVideoScalingModeFit)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         previewLayer.connection?.videoOrientation = .portrait
     }
     
@@ -487,7 +487,6 @@ private extension CameraController {
         }
         
         stillImageOutput = AVCaptureStillImageOutput()
-        
         stillImageOutput?.outputSettings = [
             AVVideoCodecKey: AVVideoCodecJPEG
         ]
@@ -497,7 +496,7 @@ private extension CameraController {
     
     func setupVideoConnection() {
         // Setup the video connction
-        videoConnection = videoDeviceOutput?.connection(with: AVMediaType.video)
+        videoConnection = videoDeviceOutput?.connection(with: .video)
         
         // TODO: Support different video orientations
         videoConnection?.videoOrientation = .portrait
@@ -505,8 +504,7 @@ private extension CameraController {
     }
     
     func setupAudioConnection() {
-        // Setup the audio connection
-        audioConnection = audioDeviceOutput?.connection(with: AVMediaType.audio)
+        audioConnection = audioDeviceOutput?.connection(with: .audio)
     }
     
     func teardownCaptureSession() {
@@ -555,7 +553,26 @@ public extension CameraController {
     }
     
     @objc public static var defaultVideoDevice: AVCaptureDevice? {
-        return AVCaptureDevice.default(for: .video)
+        if #available(iOS 10, *) {
+            let positions: [AVCaptureDevice.Position] = [.back, .front]
+            for position in positions {
+                let discoverySession = AVCaptureDevice.DiscoverySession(
+                    deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera],
+                    mediaType: .video,
+                    position: position
+                )
+                
+                if let device = discoverySession.devices.first {
+                    return device
+                } else {
+                    continue
+                }
+            }
+            
+            return nil
+        } else {
+            return AVCaptureDevice.default(for: .video)
+        }
     }
     
     @objc public var inputDevices: [AVCaptureInput] {

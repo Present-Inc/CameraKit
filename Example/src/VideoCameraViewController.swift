@@ -25,7 +25,9 @@ class VideoCameraViewController: BaseCameraViewController {
     @objc
     func toggleRecording(_ sender: UIButton) {
         recording = !recording
-        recording ? movieFileOutput.startRecording(to: newOutputFileURL(), recordingDelegate: self) : movieFileOutput.stopRecording()
+        recording
+            ? movieFileOutput.startRecording(to: newOutputFileURL(), recordingDelegate: self)
+            : movieFileOutput.stopRecording()
     }
 }
 
@@ -64,8 +66,8 @@ extension VideoCameraViewController: AVCaptureFileOutputRecordingDelegate {
                 guard let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url),
                     let assetPlaceholder = assetRequest.placeholderForCreatedAsset,
                     let albumChangeRequest = PHAssetCollectionChangeRequest(for: album)
-                    else {
-                        return
+                else {
+                    return
                 }
                 
                 let assets: NSFastEnumeration = [assetPlaceholder] as NSFastEnumeration
