@@ -555,7 +555,7 @@ private extension CameraController {
         return [
             String(kCVPixelBufferPixelFormatTypeKey): liveVideoOptimized
                 ? NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
-                : NSNumber(value: kCVPixelFormatType_32RGBA)
+                : NSNumber(value: kCVPixelFormatType_32BGRA)
         ]
     }
 }
