@@ -23,7 +23,7 @@ open class CameraController: NSObject {
         /// Uses a `kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange` pixel
         /// format.
         case liveVideo
-        /// Uses a `kCVPixelFormatType_32RGBA` pixel format.
+        /// Uses a `kCVPixelFormatType_32BGRA` pixel format.
         case video
         case slowMotionVideo
         case photo
