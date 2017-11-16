@@ -471,7 +471,7 @@ private extension CameraController {
         videoDataOutput.videoSettings = videoOutputSettings
         
         // Add the video device output
-        addOutput(videoDeviceOutput)
+        addOutput(videoDataOutput)
         
         videoDeviceOutput = videoDataOutput
     }
@@ -483,11 +483,13 @@ private extension CameraController {
         }
         
         // Setup the audio device output
-        audioDeviceOutput = AVCaptureAudioDataOutput()
-        audioDeviceOutput?.setSampleBufferDelegate(self, queue: audioOutputQueue)
+        let audioDataOutput = AVCaptureAudioDataOutput()
+        audioDataOutput.setSampleBufferDelegate(self, queue: audioOutputQueue)
         
         // Add the audio device output
-        addOutput(audioDeviceOutput)
+        addOutput(audioDataOutput)
+        
+        audioDeviceOutput = audioDataOutput
     }
     
     func setupStillImageOutput() {
