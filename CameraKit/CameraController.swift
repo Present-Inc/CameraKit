@@ -20,6 +20,10 @@ open class CameraController: NSObject {
     }
     
     public enum CaptureMode {
+        /// Uses a `kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange` pixel
+        /// format.
+        case liveVideo
+        /// Uses a `kCVPixelFormatType_32RGBA` pixel format.
         case video
         case slowMotionVideo
         case photo
@@ -47,7 +51,7 @@ open class CameraController: NSObject {
     
     open weak var delegate: CameraControllerDelegate?
     
-    @objc open let captureSession: AVCaptureSession = AVCaptureSession()
+    public let captureSession: AVCaptureSession = AVCaptureSession()
     @objc open let previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
     
     fileprivate let captureModes: Set<CaptureMode>
@@ -76,15 +80,16 @@ open class CameraController: NSObject {
         teardownCaptureSession()
     }
     
-    public init(captureModes: Set<CaptureMode>) throws {
+    public init(captureModes: Set<CaptureMode>, delegate: CameraControllerDelegate? = nil) throws {
         self.captureModes = captureModes
+        self.delegate = delegate
         
         super.init()
         
         try setup()
     }
     
-    public convenience init(captureMode: CaptureMode = .video) throws {
+    public convenience init(captureMode: CaptureMode = .video, delegate: CameraControllerDelegate? = nil) throws {
         try self.init(captureModes: [captureMode])
     }
     
@@ -120,16 +125,20 @@ open class CameraController: NSObject {
             throw Error.photoModeNotEnabled
         }
         
-        if let videoConnection = stillImageOutput?.connection(with: AVMediaType.video) , (videoConnection.isEnabled && videoConnection.isActive) {
-            stillImageOutput?.captureStillImageAsynchronously(from: videoConnection, completionHandler: { [unowned self] sampleBuffer, error in
-                let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer!)
-                guard let image = UIImage(data: imageData!)
-                else {
-                    return
-                }
+        if let videoConnection = stillImageOutput?.connection(with: .video),
+            (videoConnection.isEnabled && videoConnection.isActive) {
+            stillImageOutput?.captureStillImageAsynchronously(
+                from: videoConnection,
+                completionHandler: { [unowned self] sampleBuffer, error in
+                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer!)
+                    guard let image = UIImage(data: imageData!)
+                    else {
+                        return
+                    }
                 
-                self.delegate?.cameraController(self, didOutputImage: image)
-            })
+                    self.delegate?.cameraController(self, didOutputImage: image)
+                }
+            )
         } else {
             throw Error.invalidStillImageOutputConnection
         }
@@ -457,14 +466,14 @@ private extension CameraController {
         }
         
         // Setup the video device output
-        videoDeviceOutput = AVCaptureVideoDataOutput()
-        videoDeviceOutput?.setSampleBufferDelegate(self, queue: videoOutputQueue)
-        videoDeviceOutput?.videoSettings = [
-            kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange as UInt32)
-        ]
+        let videoDataOutput = AVCaptureVideoDataOutput()
+        videoDataOutput.setSampleBufferDelegate(self, queue: videoOutputQueue)
+        videoDataOutput.videoSettings = videoOutputSettings
         
         // Add the video device output
         addOutput(videoDeviceOutput)
+        
+        videoDeviceOutput = videoDataOutput
     }
     
     func setupAudioDeviceOutput() {
@@ -534,6 +543,18 @@ private extension CameraController {
     
     var slowMotionEnabled: Bool {
         return captureModes.contains(.slowMotionVideo)
+    }
+    
+    var liveVideoOptimized: Bool {
+        return captureModes.contains(.liveVideo)
+    }
+    
+    var videoOutputSettings: [String: Any] {
+        return [
+            String(kCVPixelBufferPixelFormatTypeKey): liveVideoOptimized
+                ? NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+                : NSNumber(value: kCVPixelFormatType_32RGBA)
+        ]
     }
 }
 

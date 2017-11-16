@@ -150,8 +150,11 @@ extension CameraViewController: UIGestureRecognizerDelegate {
 private extension CameraViewController {
     func setup() {
         do {
-            cameraController = try CameraController(captureModes: captureModes)
-            cameraController.delegate = self
+            cameraController = try CameraController(
+                captureModes: captureModes,
+                delegate: self
+            )
+            
             cameraPreview.add(previewLayer: cameraController.previewLayer)
         } catch let error as CameraController.Error {
             switch error {
