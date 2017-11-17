@@ -4,7 +4,7 @@ import Photos
 
 
 class VideoCameraViewController: BaseCameraViewController {
-    override var captureModes: Set<CameraController.CaptureMode> { return [.video] }
+    override var captureModes: Set<CameraController.CaptureMode> { return [.video, .audio] }
     
     @IBOutlet
     fileprivate var captureButton: UIButton! {
