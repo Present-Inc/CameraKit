@@ -25,8 +25,14 @@ open class CameraController: NSObject {
         case liveVideo
         /// Uses a `kCVPixelFormatType_32BGRA` pixel format.
         case video
+        /// Configures the capture session for slow motion video capture if
+        /// available.
         case slowMotionVideo
+        /// Configures the capture session for high-quality image capture.
+        /// Cannot capture audio in photo mode.
         case photo
+        /// Must be included to capture audio.
+        case audio
     }
     
     public enum Error: Swift.Error {
@@ -406,7 +412,7 @@ private extension CameraController {
         setupVideoDeviceOutput()
         setupVideoConnection()
         
-        if !photoModeEnabled {
+        if !photoModeEnabled && audioEnabled {
             try setupAudioDeviceInput()
             setupAudioDeviceOutput()
             setupAudioConnection()
@@ -537,6 +543,10 @@ private extension CameraController {
 private extension CameraController {
     var photoModeEnabled: Bool {
         return captureModes.contains(.photo)
+    }
+    
+    var audioEnabled: Bool {
+        return captureModes.contains(.audio)
     }
     
     var videoModeEnabled: Bool {
